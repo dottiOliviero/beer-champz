@@ -3,24 +3,26 @@ package beer
 import (
 	"beerchampz/pkg/config"
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
-	"gorm.io/gorm"
 )
 
 // AddRouter :
-func AddRouter(conf *config.Config, db *gorm.DB, r *gin.Engine) {
+func AddRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 
 	logger := conf.GetLogger()
 	route := r.Group("/beer")
 
-	route.POST("/", func(ctx *gin.Context) {
-		var requestBody BeerDTO
+	beerRepository := NewRepository(db)
 
-		b, err := ioutil.ReadAll(ctx.Request.Body)
+	route.POST("/", func(ctx *gin.Context) {
+		var requestBody Beer
+
+		b, err := io.ReadAll(ctx.Request.Body)
 		if err != nil {
 			logger.Error("error reading req body", zap.Error(err))
 			ctx.String(http.StatusBadRequest, "Bad Request")
@@ -32,7 +34,12 @@ func AddRouter(conf *config.Config, db *gorm.DB, r *gin.Engine) {
 			ctx.String(http.StatusBadRequest, "Bad Request")
 			return
 		}
-		res := CreateBeer(db, requestBody)
+
+		params := MapRequestToInsertParams(requestBody)
+		res, err := CreateBeer(beerRepository, params)
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, "Error while creating beer")
+		}
 		ctx.JSON(http.StatusOK, res)
 	})
 }

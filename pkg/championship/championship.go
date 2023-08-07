@@ -2,15 +2,25 @@ package championship
 
 import (
 	beer "beerchampz/pkg/beer"
-
-	"gorm.io/gorm"
 )
 
 // Championship model
 type Championship struct {
-	gorm.Model
-	Winner beer.BeerDTO `json:"winner"`
-	Rounds []Round      `json:"rounds"`
+	ID       int
+	WinnerID int32
+	Rounds   []Round
+}
+
+type ChampionshipEnhanced struct {
+	ID       int
+	WinnerID int32
+	Quarter1 Round
+	Quarter2 Round
+	Quarter3 Round
+	Quarter4 Round
+	Semi1    Round
+	Semi2    Round
+	Final    Round
 }
 
 // RoundKind type
@@ -25,17 +35,34 @@ const (
 
 // Round model
 type Round struct {
-	ID      string
-	Winner  beer.BeerDTO
-	Kind    RoundKind
-	Players []beer.BeerDTO
+	ID       string `gorm:"primaryKey"`
+	WinnerID int32
+	Kind     RoundKind
+	Beers    []beer.Beer
 }
 
 func buildRound(kind RoundKind, id string) Round {
 	return Round{
-		ID:      id,
-		Winner:  beer.BeerDTO{},
-		Kind:    kind,
-		Players: []beer.BeerDTO{},
+		ID:       id,
+		WinnerID: -1,
+		Kind:     kind,
+		Beers:    []beer.Beer{},
 	}
+}
+
+func (r Round) getParticipantIds() []int {
+	var ids []int
+	for _, beer := range r.Beers {
+		ids = append(ids, beer.ID)
+	}
+	return ids
+}
+
+func (r Round) getWinnerByID(winnerID int) beer.Beer {
+	for _, beer := range r.Beers {
+		if beer.ID == winnerID {
+			return beer
+		}
+	}
+	return beer.Beer{}
 }

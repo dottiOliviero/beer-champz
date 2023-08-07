@@ -1,16 +1,15 @@
 package beer
 
 import (
-	"gorm.io/gorm"
+	"context"
+	"fmt"
 )
 
 // GetAllBeers :
-func GetAllBeers(db *gorm.DB) []BeerDTO {
-	var beersDB []Beer
-	db.Find(&beersDB)
-	var result []BeerDTO
-	for _, beer := range beersDB {
-		result = append(result, beer.toBeerDTO())
+func GetAllBeers(beerRepository Repository) ([]Beer, error) {
+	beers, err := beerRepository.GetAll(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("unable to retrive beers: %v", err)
 	}
-	return result
+	return beers, nil
 }

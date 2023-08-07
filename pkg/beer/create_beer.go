@@ -1,20 +1,16 @@
 package beer
 
-import "gorm.io/gorm"
+import (
+	beerDB "beerchampz/pkg/beer/db"
+	"context"
+	"fmt"
+)
 
 // CreateBeer :
-func CreateBeer(db *gorm.DB, beer BeerDTO) BeerDTO {
-	beerDB := Beer{
-		Name:      beer.Name,
-		Style:     beer.Style,
-		SubStyle:  beer.SubStyle,
-		ABV:       beer.ABV,
-		ShortDesc: beer.ShortDesc,
-		Brewery:   beer.Brewery,
-		Image:     beer.Image,
-		Score:     beer.Score,
+func CreateBeer(beerRepository Repository, params beerDB.InsertBeerParams) (int32, error) {
+	newBeerID, err := beerRepository.InsertBeer(context.Background(), params)
+	if err != nil {
+		return 0, fmt.Errorf("An error occurred while creting the beer %v", err)
 	}
-	db.Create(&beerDB)
-	beer.ID = beerDB.ID
-	return beer
+	return newBeerID, nil
 }

@@ -1,17 +1,18 @@
 package championship
 
 import (
-	"beerchampz/pkg/beer"
-
-	"gorm.io/gorm"
+	"context"
 )
 
 // CreateChampionship :
-func CreateChampionship(db *gorm.DB, rounds []Round) Championship {
-	champ := Championship{
-		Winner: beer.BeerDTO{},
-		Rounds: rounds,
+func CreateChampionship(championshipRepository Repository, rounds []Round) (Championship, error) {
+	r, err := mapRoundsToDB(rounds)
+	if err != nil {
+		return Championship{}, err
 	}
-	db.Create(&champ)
-	return champ
+	c, err := championshipRepository.InsertChampionship(context.Background(), r)
+	if err != nil {
+		return Championship{}, err
+	}
+	return c, nil
 }
