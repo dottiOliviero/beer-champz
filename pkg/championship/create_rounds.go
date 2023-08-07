@@ -5,9 +5,9 @@ import (
 	"math/rand"
 )
 
-func extractParticipants(beers []beerModel.BeerDTO) []beerModel.BeerDTO {
+func extractParticipants(beers []beerModel.Beer) []beerModel.Beer {
 	// extract 8 items randomly from the list
-	var selectedItems []beerModel.BeerDTO
+	var selectedItems []beerModel.Beer
 	if len(beers) < 8 {
 		panic("not enough items!!")
 	}
@@ -22,19 +22,19 @@ func extractParticipants(beers []beerModel.BeerDTO) []beerModel.BeerDTO {
 	return selectedItems
 }
 
-func createPairings(beers []beerModel.BeerDTO) []Round {
+func createPairings(beers []beerModel.Beer) []Round {
 	// builds the initial rounds randomly using a list of participants
 	rounds := []Round{buildRound(Final, "ADBC"), buildRound(Semi, "AD"), buildRound(Semi, "BC")}
 
 	for i, letter := range "ABCD" {
 		var round = buildRound(Quarter, string(letter))
-		round.Players = []beerModel.BeerDTO{beers[2*i], beers[2*i+1]}
+		round.Beers = []beerModel.Beer{beers[2*i], beers[2*i+1]}
 		rounds = append(rounds, round)
 	}
 	return rounds
 }
 
 // CreateChampionshipRounds :
-func CreateChampionshipRounds(beers []beerModel.BeerDTO) []Round {
+func CreateChampionshipRounds(beers []beerModel.Beer) []Round {
 	return createPairings(extractParticipants(beers))
 }

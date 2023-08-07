@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.5"
+        integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="grid grid-cols-7" x-data="{open: false, activeRound: '', activeId: '', activeBeer: {}}">
+        <!-- quarti -->
+
+        <div class="flex col-span-2 rounded-xl bg-orange-200">
+            {{ range .Quarter1.Beers }}
+            <div class="w-[70px] hover:cursor-pointer"
+                @click="open = !open ; activeRound = 'A' ; activeId = '33' ; activeBeer = {'name': 'TESTNAME', 'style': '13', 'brewery': 'pippo', 'alcol': '6.8%'} ">
+                <img src="../assets/bera_senza_sfondo.png" alt="beer1" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div class="">VS</div>
+        </div>
+
+        <div class="col-span-3">SPACE</div>
+        <div class="flex col-span-2 rounded-xl bg-orange-200">
+            {{ range .Quarter2.Beers }}
+            <div class="w-[70px]">
+                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div>VS</div>
+        </div>
+        <!-- quarti -->
+
+        <!-- semifinale -->
+        <div class="col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <div class="flex col-span-3">
+            {{ range .Semi1.Beers }}
+            <div class="rounded-xl bg-orange-200">
+                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div>VS</div>
+        </div>
+        <div class="flex col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <!-- semifinale -->
+
+        <!-- finale -->
+        <div class="flex rounded-xl bg-cyan-500">SPACE</div>
+        <div class="flex col-span-5 rounded-xl bg-orange-200">
+            {{ range .Final.Beers }}
+            <div class="bg-red-600 rounded-l-xl">
+                <img src="{{ .Image }}" class="" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div>VS</div>
+        </div>
+        <div class="flex rounded-xl bg-cyan-500">SPACE</div>
+        <!-- finale -->
+
+        <!-- semifinale -->
+        <div class="col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <div class="flex col-span-3">
+            {{ range .Semi2.Beers }}
+            <div class="rounded-xl bg-orange-200">
+                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div>VS</div>
+
+        </div>
+        <div class="flex col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <!-- semifinale -->
+
+        <div class="flex col-span-2 rounded-xl bg-orange-200">
+            {{ range .Quarter3.Beers }}
+            <div class=" w-[70px]">
+                <img src="assets/bera_senza_sfondo.png" alt="beer1" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div class="">VS</div>
+        </div>
+
+        <div class="col-span-3">SPACE</div>
+        <div class="flex col-span-2 rounded-xl bg-orange-200">
+            {{ range .Quarter4.Beers}}
+            <div class="w-[70px]">
+                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
+                <p>{{ .Name }}</p>
+            </div>
+            {{ end }}
+            <div>VS</div>
+        </div>
+
+        <!-- dialog modal -->
+        <div class="flex flex-col justify-center block fixed top-0 left-0 z-10 w-full h-full overflow-auto bg-sky-500/75"
+            x-show="open" x-transition.duration.500ms>
+            <div class="modal-content bg-slate-50 px-5 w-100 rounded-md">
+                <div class="flex mb-2 justify-end">
+                    <button type="button" class="close float-right" x-on:click="open = false">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2">
+                    <div class="rounded-xl bg-orange-200">
+                        <img src="assets/bera_senza_sfondo.png" />
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                            </svg>
+
+                            <p>Style: </p>
+                            <p x-text="activeBeer.style"></p>
+                        </div>
+                        <div class="flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                            </svg>
+
+                            <p>Alcol: </p>
+                            <p x-text="activeBeer.alcol"></p>
+                        </div>
+                        <div class="flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+                            </svg>
+                            <p>Brewery: </p>
+                            <p x-text="activeBeer.brewery"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex">
+                    <div x-text="activeBeer.name" class="font-bold"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6" @click="activeBeer = ">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                    </svg>
+                </div>
+                <div class="flex">
+                    <p class="">description</p>
+                </div>
+                <form>
+                    <div class="flex mb-2">
+                        <input type="text" name="roundID" x-model="activeRound" hidden />
+                        <input type="text" name="winnerID" x-model="activeId" hidden />
+                        <button type="submit" hx-post="`/championship/{{.ID}}`"
+                            hx-include="input[name='round'], input[name='winnerID']"
+                            class="mx-auto rounded-xl bg-cyan-500 w-[20%]"
+                            @click="open = false"
+                            >Vote
+                        </button>
+                    </div>
+                    <!-- <button type="submit" hx-post="`/championship/{{.ID}}`" x-init="$nextTick(() => htmx.process($el))" class="mx-auto rounded-xl bg-cyan-500 w-[20%]">Vote</div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
