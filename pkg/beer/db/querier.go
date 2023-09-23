@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	GetAll(ctx context.Context) ([]Beer, error)
 	InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, error)
+	UpdateBeerScore(ctx context.Context, id int32) (Beer, error)
 }
 
 var _ Querier = (*Queries)(nil)

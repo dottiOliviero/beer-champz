@@ -4,7 +4,6 @@ import (
 	beer "beerchampz/pkg/beer"
 	"beerchampz/pkg/config"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -14,8 +13,8 @@ import (
 )
 
 type SetRoundWinnerRequestBody struct {
-	roundID  string
-	winnerID int
+	RoundID  string      `json:"roundID" form:"round"`
+	WinnerID json.Number `json:"winnerID" form:"winnerID"`
 }
 
 // AddRouter :
@@ -82,10 +81,6 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 	beerRepository := beer.NewRepository(db)
 	championshipRepository := NewRepository(db)
 
-	route.GET("/home", func(ctx *gin.Context) {
-		ctx.HTML(200, "index.html", nil)
-	})
-
 	route.GET("/new", func(ctx *gin.Context) {
 		beers, err := beer.GetAllBeers(beerRepository)
 
@@ -119,25 +114,22 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 		var championshipID, _ = strconv.ParseInt(ctx.Param("id"), 10, 32)
 		var requestBody SetRoundWinnerRequestBody
 
-		b, err := ioutil.ReadAll(ctx.Request.Body)
-		if err != nil {
-			logger.Error("error reading req body", zap.Error(err))
-			ctx.String(http.StatusBadRequest, "Bad Request")
-			return
-		}
-		if err := json.Unmarshal(b, &requestBody); err != nil {
+		if err := ctx.ShouldBind(&requestBody); err != nil {
 			logger.Error("error unmarshaling JSON req body", zap.Error(err))
 			ctx.String(http.StatusBadRequest, "Bad Request")
 			return
 		}
 
-		logger.Info("set winner for round", zap.String("roundId", requestBody.roundID))
-
-		championship, err := SetRoundWinner(championshipRepository, int32(championshipID), requestBody.roundID, int32(requestBody.winnerID))
+		logger.Info("set winner for round", zap.String("roundId", requestBody.RoundID))
+		winnerId, _ := requestBody.WinnerID.Int64()
+		championship, err := SetRoundWinner(championshipRepository, int32(championshipID), requestBody.RoundID, int32(winnerId))
 		if err != nil {
 			logger.Error("error setting round winner", zap.Error(err))
 			ctx.String(http.StatusInternalServerError, "Unable to set winner for the round")
 			return
+		}
+		if championship.WinnerID != 0 {
+			beer.UpdateBeerScore(beerRepository, championship.WinnerID)
 		}
 		ctx.HTML(200, "championship.html", mapChampionshipToEnhanced(*championship))
 	})

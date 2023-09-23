@@ -1,6 +1,7 @@
 package championship
 
 import (
+	"beerchampz/pkg/beer"
 	championshipDB "beerchampz/pkg/championship/db"
 	"encoding/json"
 )
@@ -35,17 +36,74 @@ func getRoundById(rounds []Round, ID string) Round {
 	return Round{}
 }
 
+func mapRoundToRoundEnhanced(r Round) RoundEndanched {
+
+	if len(r.Beers) == 2 {
+		isActive := r.WinnerID == -1
+		return RoundEndanched{
+			ID:       r.ID,
+			WinnerID: r.WinnerID,
+			Left:     r.Beers[0],
+			Right:    r.Beers[1],
+			IsActive: isActive,
+		}
+	} else if len(r.Beers) == 1 {
+		return RoundEndanched{
+			ID:       r.ID,
+			WinnerID: r.WinnerID,
+			Left:     r.Beers[0],
+			Right:    beer.Beer{},
+			IsActive: false,
+		}
+	}
+	return RoundEndanched{
+		ID:       r.ID,
+		WinnerID: r.WinnerID,
+		Left:     beer.Beer{},
+		Right:    beer.Beer{},
+		IsActive: false,
+	}
+}
+
+func mapChildRoundToRoundEnhanced(r Round, parentLeft Round, parentRight Round) RoundEndanched {
+	leftBeer := beer.GetByWinnerID(parentLeft.Beers, int(parentLeft.WinnerID))
+	rightBeer := beer.GetByWinnerID(parentRight.Beers, int(parentRight.WinnerID))
+
+	var isActive = false
+
+	if r.WinnerID == -1 && len(r.Beers) == 2 {
+		isActive = true
+	}
+
+	return RoundEndanched{
+		ID:       r.ID,
+		WinnerID: r.WinnerID,
+		Left:     leftBeer,
+		Right:    rightBeer,
+		IsActive: isActive,
+	}
+}
+
 func mapChampionshipToEnhanced(c Championship) ChampionshipEnhanced {
+	quarter1 := getRoundById(c.Rounds, "A")
+	quarter2 := getRoundById(c.Rounds, "B")
+	quarter3 := getRoundById(c.Rounds, "C")
+	quarter4 := getRoundById(c.Rounds, "D")
+	semi1 := getRoundById(c.Rounds, "AD")
+	semi2 := getRoundById(c.Rounds, "BC")
+	final := getRoundById(c.Rounds, "ADBC")
+
 	enhanced := ChampionshipEnhanced{
-		ID:       c.ID,
-		WinnerID: c.WinnerID,
-		Quarter1: getRoundById(c.Rounds, "A"),
-		Quarter2: getRoundById(c.Rounds, "B"),
-		Quarter3: getRoundById(c.Rounds, "C"),
-		Quarter4: getRoundById(c.Rounds, "D"),
-		Semi1:    getRoundById(c.Rounds, "AD"),
-		Semi2:    getRoundById(c.Rounds, "BC"),
-		Final:    getRoundById(c.Rounds, "ADBC"),
+		ID:         c.ID,
+		WinnerID:   c.WinnerID,
+		WinnerName: final.getWinnerByID(int(c.WinnerID)).Name,
+		Quarter1:   mapRoundToRoundEnhanced(quarter1),
+		Quarter2:   mapRoundToRoundEnhanced(quarter2),
+		Quarter3:   mapRoundToRoundEnhanced(quarter3),
+		Quarter4:   mapRoundToRoundEnhanced(quarter4),
+		Semi1:      mapChildRoundToRoundEnhanced(semi1, quarter1, quarter4),
+		Semi2:      mapChildRoundToRoundEnhanced(semi2, quarter2, quarter3),
+		Final:      mapChildRoundToRoundEnhanced(final, semi1, semi2),
 	}
 	return enhanced
 }

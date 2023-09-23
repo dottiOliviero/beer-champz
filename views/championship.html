@@ -2,126 +2,184 @@
 <html>
 
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.3/dist/full.css" rel="stylesheet" type="text/css" />
+    <script defer src="/dist/alpinejs.min.js"></script>
     <script src="https://cdn.tailwindcss.com/3.3.0"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.5"
-        integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO"
-        crossorigin="anonymous"></script>
+    <script src="/dist/htmx.min.js"></script>
+    <script src="/dist/json-enc.js"></script>
 </head>
 
 <body>
-    <div class="grid grid-cols-7" x-data="{open: false, activeRound: '', activeId: '', activeBeer: {}}">
-        <!-- quarti -->
+    <style>
+        .beer-label {
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-        <div class="flex col-span-2 rounded-xl bg-orange-200">
-            {{ range .Quarter1.Beers }}
-            <div class="w-[70px] hover:cursor-pointer"
-                @click="open = !open ; activeRound = 'A' ; activeId = '33' ; activeBeer = {'name': 'TESTNAME', 'style': '13', 'brewery': 'pippo', 'alcol': '6.8%'} ">
-                <img src="../assets/bera_senza_sfondo.png" alt="beer1" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        .beer-image {
+            margin-left: auto;
+            margin-right: auto;
+            width: 50px;
+            font-size: x-small;
+        }
+    </style>
+    <div class="grid grid-cols-7 m-2 gap-2" x-data="{open: false, activeRound: {}, activeBeer: {}, finalOpen: {{ .WinnerID}} != 0 }">
+        <!-- quarti -->
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer h-[120px] w-[150px]"
+            @click="if({{ .Quarter1.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter1.ID }}', 'left': {'id': {{ .Quarter1.Left.ID }}, 'name': '{{ .Quarter1.Left.Name }}', 'style': '{{ .Quarter1.Left.Style }}', 'brewery': '{{ .Quarter1.Left.Brewery }}', 'abv': '{{ .Quarter1.Left.ABV }}', 'desc': '{{ .Quarter1.Left.ShortDesc }}' }, 'right': {'id': {{ .Quarter1.Right.ID }}, 'name': '{{ .Quarter1.Right.Name }}', 'style': '{{ .Quarter1.Right.Style }}', 'brewery': '{{ .Quarter1.Right.Brewery }}', 'abv': '{{ .Quarter1.Right.ABV }}', 'desc': '{{ .Quarter1.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Quarter1.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter1.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div class="">VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Quarter1.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter4.Right.Name }}</p> -->
+            </div>
         </div>
 
-        <div class="col-span-3">SPACE</div>
-        <div class="flex col-span-2 rounded-xl bg-orange-200">
-            {{ range .Quarter2.Beers }}
-            <div class="w-[70px]">
-                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        <div class="bg-transparent col-span-1"></div>
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 rounded-xl bg-orange-200 h-[120px] w-[150px]"
+            @click="if({{ .Quarter4.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter4.ID }}',  'left': {'id': {{ .Quarter4.Left.ID }}, 'name': '{{ .Quarter4.Left.Name }}', 'style': '{{ .Quarter4.Left.Style }}', 'brewery': '{{ .Quarter4.Left.Brewery }}', 'abv': '{{ .Quarter4.Left.ABV }}', 'desc': '{{ .Quarter4.Left.ShortDesc }}' }, 'right': {'id': {{ .Quarter4.Right.ID }}, 'name': '{{ .Quarter4.Right.Name }}', 'style': '{{ .Quarter4.Right.Style }}', 'brewery': '{{ .Quarter4.Right.Brewery }}', 'abv': '{{ .Quarter4.Right.ABV }}', 'desc': '{{ .Quarter4.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Quarter4.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter4.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div>VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Quarter4.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter4.Right.Name }}</p> -->
+            </div>
         </div>
         <!-- quarti -->
 
         <!-- semifinale -->
-        <div class="col-span-2 rounded-xl bg-cyan-500">SPACE</div>
-        <div class="flex col-span-3">
-            {{ range .Semi1.Beers }}
-            <div class="rounded-xl bg-orange-200">
-                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        <div class="col-span-2 rounded-xl bg-transparent"></div>
+
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-400 my-1 hover:cursor-pointer h-[150px] w-[180px]"
+            @click="if({{ .Semi1.IsActive }}){open = true ; activeRound = {'id': '{{ .Semi1.ID }}',  'left': {'id': {{ .Semi1.Left.ID }}, 'name': '{{ .Semi1.Left.Name }}', 'style': '{{ .Semi1.Left.Style }}', 'brewery': '{{ .Semi1.Left.Brewery }}', 'abv': '{{ .Semi1.Left.ABV }}', 'desc': '{{ .Semi1.Left.ShortDesc }}' }, 'right': {'id': {{ .Semi1.Right.ID }}, 'name': '{{ .Semi1.Right.Name }}', 'style': '{{ .Semi1.Right.Style }}', 'brewery': '{{ .Semi1.Right.Brewery }}', 'abv': '{{ .Semi1.Right.ABV }}', 'desc': '{{ .Semi1.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Semi1.Left.ID}}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Semi1.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div>VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Semi1.Right.ID}}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Semi1.Right.Name }}</p> -->
+            </div>
         </div>
-        <div class="flex col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <div class="col-span-2 rounded-xl bg-transparent"></div>
         <!-- semifinale -->
 
         <!-- finale -->
-        <div class="flex rounded-xl bg-cyan-500">SPACE</div>
-        <div class="flex col-span-5 rounded-xl bg-orange-200">
-            {{ range .Final.Beers }}
-            <div class="bg-red-600 rounded-l-xl">
-                <img src="{{ .Image }}" class="" />
-                <p>{{ .Name }}</p>
+        <div class="rounded-xl bg-transparent"></div>
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-5 rounded-xl bg-orange-600 my-1 hover:cursor-pointer h-[180px] w-[280px]"
+            @click="if({{ .Final.IsActive }}){open = true ; activeRound = {'id': '{{ .Final.ID }}',  'left': {'id': {{ .Final.Left.ID }}, 'name': '{{ .Final.Left.Name }}', 'style': '{{ .Final.Left.Style }}', 'brewery': '{{ .Final.Left.Brewery }}', 'abv': '{{ .Final.Left.ABV }}', 'desc': '{{ .Final.Left.ShortDesc }}' }, 'right': {'id': {{ .Final.Right.ID }}, 'name': '{{ .Final.Right.Name }}', 'style': '{{ .Final.Right.Style }}', 'brewery': '{{ .Final.Right.Brewery }}', 'abv': '{{ .Final.Right.ABV }}', 'desc': '{{ .Final.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Final.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <p class="beer-label text-base">{{ .Final.Left.Name }}</p>
             </div>
-            {{ end }}
-            <div>VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Final.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <p class="beer-label text-base">{{ .Final.Right.Name }}</p>
+            </div>
         </div>
-        <div class="flex rounded-xl bg-cyan-500">SPACE</div>
+        <div class="rounded-xl bg-transparent"></div>
         <!-- finale -->
 
         <!-- semifinale -->
-        <div class="col-span-2 rounded-xl bg-cyan-500">SPACE</div>
-        <div class="flex col-span-3">
-            {{ range .Semi2.Beers }}
-            <div class="rounded-xl bg-orange-200">
-                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        <div class="col-span-2 rounded-xl bg-transparent"></div>
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 bg-orange-400 rounded-xl my-1 hover:cursor-pointer h-[150px] w-[180px]"
+            @click="if({{ .Semi2.IsActive }}){open = true ; activeRound = {'id': '{{ .Semi2.ID }}',  'left': {'id': {{ .Semi2.Left.ID }}, 'name': '{{ .Semi2.Left.Name }}', 'style': '{{ .Semi2.Left.Style }}', 'brewery': '{{ .Semi2.Left.Brewery }}', 'abv': '{{ .Semi2.Left.ABV }}', 'desc': '{{ .Semi2.Left.ShortDesc }}' }, 'right': {'id': {{ .Semi2.Right.ID }}, 'name': '{{ .Semi2.Right.Name }}', 'style': '{{ .Semi2.Right.Style }}', 'brewery': '{{ .Semi2.Right.Brewery }}', 'abv': '{{ .Semi2.Right.ABV }}', 'desc': '{{ .Semi2.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Semi2.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Semi2.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div>VS</div>
-
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Semi2.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Semi2.Right.Name }}</p> -->
+            </div>
         </div>
-        <div class="flex col-span-2 rounded-xl bg-cyan-500">SPACE</div>
+        <div class="col-span-2 rounded-xl bg-transparent"></div>
         <!-- semifinale -->
 
-        <div class="flex col-span-2 rounded-xl bg-orange-200">
-            {{ range .Quarter3.Beers }}
-            <div class=" w-[70px]">
-                <img src="assets/bera_senza_sfondo.png" alt="beer1" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        <!-- quarti -->
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer h-[120px] w-[150px]"
+            @click="if({{ .Quarter2.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter2.ID }}',  'left': {'id': {{ .Quarter2.Left.ID }}, 'name': '{{ .Quarter2.Left.Name }}', 'style': '{{ .Quarter2.Left.Style }}', 'brewery': '{{ .Quarter2.Left.Brewery }}', 'abv': '{{ .Quarter2.Left.ABV }}', 'desc': '{{ .Quarter2.Left.ShortDesc }}' }, 'right': {'id': {{ .Quarter2.Right.ID }}, 'name': '{{ .Quarter2.Right.Name }}', 'style': '{{ .Quarter2.Right.Style }}', 'brewery': '{{ .Quarter2.Right.Brewery }}', 'abv': '{{ .Quarter2.Right.ABV }}', 'desc': '{{ .Quarter2.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Quarter2.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter2.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div class="">VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center">
+                <img src="assets/{{ .Quarter2.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter2.Right.Name }}</p> -->
+            </div>
         </div>
 
-        <div class="col-span-3">SPACE</div>
-        <div class="flex col-span-2 rounded-xl bg-orange-200">
-            {{ range .Quarter4.Beers}}
-            <div class="w-[70px]">
-                <img src="assets/bera_senza_sfondo.png" class="w-[70px]" />
-                <p>{{ .Name }}</p>
+        <div class="col-span-1 bg-transparent"></div>
+        <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer h-[120px] w-[150px]"
+            @click="if({{ .Quarter3.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter3.ID }}',  'left': {'id': {{ .Quarter3.Left.ID }}, 'name': '{{ .Quarter3.Left.Name }}', 'style': '{{ .Quarter3.Left.Style }}', 'brewery': '{{ .Quarter3.Left.Brewery }}', 'abv': '{{ .Quarter3.Left.ABV }}', 'desc': '{{ .Quarter3.Left.ShortDesc }}' }, 'right': {'id': {{ .Quarter3.Right.ID }}, 'name': '{{ .Quarter3.Right.Name }}', 'style': '{{ .Quarter3.Right.Style }}', 'brewery': '{{ .Quarter3.Right.Brewery }}', 'abv': '{{ .Quarter3.Right.ABV }}', 'desc': '{{ .Quarter3.Right.ShortDesc }}' } } ; activeBeer = activeRound.left}">
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Quarter3.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter3.Left.Name }}</p> -->
             </div>
-            {{ end }}
-            <div>VS</div>
+            <div class="divider divider-horizontal justify-self-center">VS</div>
+            <div class="flex flex-col justify-center ">
+                <img src="assets/{{ .Quarter3.Right.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
+                    class="beer-image" />
+                <!-- <p class="beer-label">{{ .Quarter3.Right.Name }}</p> -->
+            </div>
         </div>
+        <!-- quarti -->
 
         <!-- dialog modal -->
-        <div class="flex flex-col justify-center block fixed top-0 left-0 z-10 w-full h-full overflow-auto bg-sky-500/75"
+        <div class="flex flex-col justify-center block fixed top-0 left-0 z-10 w-full h-full overflow-auto bg-stone-500/75"
             x-show="open" x-transition.duration.500ms>
             <div class="modal-content bg-slate-50 px-5 w-100 rounded-md">
-                <div class="flex mb-2 justify-end">
-                    <button type="button" class="close float-right" x-on:click="open = false">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="grid grid-cols-2">
-                    <div class="rounded-xl bg-orange-200">
-                        <img src="assets/bera_senza_sfondo.png" />
+
+                <button type="button" class="close float-right" x-on:click="open = false">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="flex my-2 justify-center">
+                    <div class="join grid grid-cols-2" x-data="{'active' : true}">
+                        <button @click="activeBeer = activeRound.left"
+                            class="join-item btn btn-outline hover:bg-orange-200 focus:bg-orange-400"
+                            :class="active && 'bg-orange-400'" x-text="activeRound.left.name"></button>
+                        <!-- focus:ring focus:ring-orange-500 -->
+                        <button @click="activeBeer = activeRound.right ; active = false"
+                            class="join-item btn btn-outline hover:bg-orange-200 focus:bg-orange-400"
+                            x-text="activeRound.right.name"></button>
                     </div>
-                    <div class="flex flex-col">
+                </div>
+
+                <div class="grid grid-rows-2 grid-flow-col gap-2 my-2">
+                    <div class="card row-span-3 bg-gradient-to-b from-orange-200 to-orange-400 shadow-xl">
+                        <img :src="`/assets/${activeBeer.id}.png`" class="w-[180px] h-[370px]" />
+                    </div>
+                    <div class="card bg-base-100 shadow-xl justify-center gap-4">
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                             </svg>
-
-                            <p>Style: </p>
+                            <p class="font-bold">Style: </p>
                             <p x-text="activeBeer.style"></p>
                         </div>
                         <div class="flex">
@@ -130,9 +188,8 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
                             </svg>
-
-                            <p>Alcol: </p>
-                            <p x-text="activeBeer.alcol"></p>
+                            <p class="font-bold">ABV: </p>
+                            <p x-text="activeBeer.abv"></p>
                         </div>
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -140,37 +197,37 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
                             </svg>
-                            <p>Brewery: </p>
+                            <p class="font-bold">Brewery: </p>
                             <p x-text="activeBeer.brewery"></p>
                         </div>
                     </div>
-                </div>
-                <div class="flex">
-                    <div x-text="activeBeer.name" class="font-bold"></div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6" @click="activeBeer = ">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                    </svg>
-                </div>
-                <div class="flex">
-                    <p class="">description</p>
+                    <div class="flex card bg-base-100 shadow-xl">
+                        <p x-text="activeBeer.desc" class="mx-auto"></p>
+                    </div>
                 </div>
                 <form>
                     <div class="flex mb-2">
-                        <input type="text" name="roundID" x-model="activeRound" hidden />
-                        <input type="text" name="winnerID" x-model="activeId" hidden />
-                        <button type="submit" hx-post="`/championship/{{.ID}}`"
-                            hx-include="input[name='round'], input[name='winnerID']"
-                            class="mx-auto rounded-xl bg-cyan-500 w-[20%]"
-                            @click="open = false"
-                            >Vote
+                        <input type="text" name="roundID" x-model="activeRound.id" hidden />
+                        <input type="number" name="winnerID" x-model="activeBeer.id" hidden />
+                        <button type="submit" hx-post="/championship/{{.ID}}" hx-ext="json-enc" hx-target="#main-screen"
+                            hx-swap class="mx-auto rounded-xl bg-orange-900 text-white w-[20%]"
+                            @click="open = false">Vote
                         </button>
                     </div>
-                    <!-- <button type="submit" hx-post="`/championship/{{.ID}}`" x-init="$nextTick(() => htmx.process($el))" class="mx-auto rounded-xl bg-cyan-500 w-[20%]">Vote</div> -->
                 </form>
             </div>
         </div>
+        <!-- winner modal -->
+        <div class="flex flex-col justify-center block fixed top-0 left-0 z-12 w-full h-full overflow-auto bg-sky-500/75"
+            x-show="{{ .WinnerID }} != 0" x-transition.duration.500ms>
+            <div class="modal-content flex flex-col justify-center bg-slate-50 px-5 w-100 rounded-md">
+                <p class="mx-auto" >The winner is {{ .WinnerName }}</p>
+                <img src="assets/{{ .WinnerID }}.png" class="w-[180px] h-[370px] mx-auto" />
+                <button class="mx-auto my-2 rounded-xl w-[80px] bg-cyan-500" @click="window.location.href='/beer-champz'">Home</button>
+            </div>
+        </div>
     </div>
+
 </body>
 
 </html>
