@@ -3,4 +3,8 @@ INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, scor
 
 
 -- name: GetAll :many
-SELECT * FROM beers;
+SELECT * FROM beers order by score DESC;
+
+
+-- name: UpdateBeerScore :one
+UPDATE beers SET score = score + 1 where id = $1 RETURNING *;

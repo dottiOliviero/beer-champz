@@ -18,6 +18,7 @@ type Repository interface {
 	Close()
 	GetAll(ctx context.Context) ([]Beer, error)
 	InsertBeer(ctx context.Context, params beerDB.InsertBeerParams) (int32, error)
+	UpdateBeerScore(ctx context.Context, id int32) (Beer, error)
 }
 
 // NewRepository creates a new users Repository
@@ -48,4 +49,12 @@ func (r *repository) InsertBeer(ctx context.Context, params beerDB.InsertBeerPar
 		return 0, err
 	}
 	return beerID, nil
+}
+
+func (r *repository) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
+	beer, err := r.querier.UpdateBeerScore(ctx, id)
+	if err != nil {
+		return Beer{}, err
+	}
+	return mapBeerToBeerDTO(beer), nil
 }

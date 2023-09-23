@@ -43,3 +43,20 @@ func AddRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 		ctx.JSON(http.StatusOK, res)
 	})
 }
+
+// AddRouter :
+func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
+
+	route := r.Group("/beer")
+
+	beerRepository := NewRepository(db)
+
+	route.GET("/ranking", func(ctx *gin.Context) {
+		beers, err := beerRepository.GetAll(ctx)
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, "Error while getting beers")
+			return
+		}
+		ctx.HTML(200, "ranking.html", beers)
+	})
+}

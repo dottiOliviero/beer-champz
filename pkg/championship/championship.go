@@ -12,15 +12,24 @@ type Championship struct {
 }
 
 type ChampionshipEnhanced struct {
-	ID       int
+	ID         int
+	WinnerID   int32
+	WinnerName string
+	Quarter1   RoundEndanched
+	Quarter2   RoundEndanched
+	Quarter3   RoundEndanched
+	Quarter4   RoundEndanched
+	Semi1      RoundEndanched
+	Semi2      RoundEndanched
+	Final      RoundEndanched
+}
+
+type RoundEndanched struct {
+	ID       string
 	WinnerID int32
-	Quarter1 Round
-	Quarter2 Round
-	Quarter3 Round
-	Quarter4 Round
-	Semi1    Round
-	Semi2    Round
-	Final    Round
+	Left     beer.Beer
+	Right    beer.Beer
+	IsActive bool
 }
 
 // RoundKind type

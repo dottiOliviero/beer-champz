@@ -22,3 +22,12 @@ func (b Beer) IsInSlice(beers []Beer) bool {
 	}
 	return false
 }
+
+func GetByWinnerID(beers []Beer, winnerID int) Beer {
+	for _, elem := range beers {
+		if elem.ID == winnerID {
+			return elem
+		}
+	}
+	return Beer{}
+}

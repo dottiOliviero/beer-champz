@@ -20,16 +20,18 @@ func createBeerList(data [][]string) []beer.Beer {
 				if j == 0 {
 					rec.Name = field
 				} else if j == 1 {
-					rec.Style = field
+					rec.SubStyle = field
 				} else if j == 2 {
 					rec.ABV = field
 				} else if j == 3 {
 					rec.ShortDesc = field
 				} else if j == 4 {
 					rec.Brewery = field
+				} else if j == 5 {
+					rec.Style = field
 				}
 			}
-			rec.Image = ""
+			rec.Image = fmt.Sprintf("assets/%d.png", i)
 			rec.Score = 0
 			rec.SubStyle = ""
 			beers = append(beers, rec)
@@ -40,7 +42,7 @@ func createBeerList(data [][]string) []beer.Beer {
 
 func readData() []beer.Beer {
 	// open file
-	f, err := os.Open("./scripts/beers.csv")
+	f, err := os.Open("./scripts/beerz.csv")
 	if err != nil {
 		log.Fatal(err)
 	}

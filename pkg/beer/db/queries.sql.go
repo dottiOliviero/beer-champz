@@ -12,7 +12,7 @@ import (
 )
 
 const getAll = `-- name: GetAll :many
-SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score FROM beers
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score FROM beers order by score DESC
 `
 
 func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
@@ -74,4 +74,25 @@ func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, 
 	var id int32
 	err := row.Scan(&id)
 	return id, err
+}
+
+const updateBeerScore = `-- name: UpdateBeerScore :one
+UPDATE beers SET score = score + 1 where id = $1 RETURNING id, name, style, sub_style, abv, short_desc, brewery, image, score
+`
+
+func (q *Queries) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
+	row := q.db.QueryRow(ctx, updateBeerScore, id)
+	var i Beer
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Style,
+		&i.SubStyle,
+		&i.Abv,
+		&i.ShortDesc,
+		&i.Brewery,
+		&i.Image,
+		&i.Score,
+	)
+	return i, err
 }
