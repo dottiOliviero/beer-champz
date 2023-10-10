@@ -106,7 +106,7 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 			ctx.String(http.StatusNotFound, "Unable to set get championship")
 			return
 		}
-		ctx.JSON(http.StatusOK, championship)
+		ctx.HTML(200, "championship.html", mapChampionshipToEnhanced(championship))
 	})
 
 	route.POST("/:id", func(ctx *gin.Context) {
@@ -129,6 +129,7 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 			return
 		}
 		if championship.WinnerID != 0 {
+			logger.Info("updating score of winner", zap.Int64("winnerId", winnerId))
 			beer.UpdateBeerScore(beerRepository, championship.WinnerID)
 		}
 		ctx.HTML(200, "championship.html", mapChampionshipToEnhanced(*championship))
