@@ -30,6 +30,6 @@ func MapRequestToInsertParams(requestBody Beer) beerDB.InsertBeerParams {
 		ShortDesc: pgtype.Text{String: requestBody.ShortDesc, Valid: true},
 		Brewery:   pgtype.Text{String: requestBody.Brewery, Valid: true},
 		Image:     pgtype.Text{String: requestBody.Image, Valid: true},
-		Score:     pgtype.Int4{Int32: int32(requestBody.Score)},
+		Score:     pgtype.Int4{Int32: int32(requestBody.Score), Valid: true},
 	}
 }

@@ -4,3 +4,6 @@ migrate-up:
 
 
 # $GOPATH/bin/sqlc --experimental generate
+
+# special chars to use
+’
