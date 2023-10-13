@@ -11,9 +11,9 @@ import (
 )
 
 func main() {
-
-	database := db.GetDb()
 	conf := config.Get()
+	database := db.GetDb(conf)
+
 	r := router.New()
 
 	r.Static("/assets", "./views/assets")
