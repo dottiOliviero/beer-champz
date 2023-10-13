@@ -2,6 +2,7 @@ package main
 
 import (
 	"beerchampz/pkg/beer"
+	"beerchampz/pkg/config"
 	"beerchampz/pkg/db"
 	"context"
 	"encoding/csv"
@@ -63,7 +64,8 @@ func readData() []beer.Beer {
 }
 
 func main() {
-	conn := db.GetDb()
+	conf := config.Get()
+	conn := db.GetDb(conf)
 	beers := readData()
 	beerRepo := beer.NewRepository(conn)
 	for _, b := range beers {
