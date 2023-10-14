@@ -3,3 +3,6 @@ READMDE.md
 Makefile
 docker-compose.yml
 .gitignore
+.env
+migrations/
+.github
