@@ -1,6 +1,7 @@
 package main
 
 import (
+	"beerchampz/pkg/config"
 	"database/sql"
 	"flag"
 	"log"
@@ -22,8 +23,9 @@ func init() {
 }
 
 func main() {
-	// conf := config.Get()
-	db, err := sql.Open("postgres", "host=localhost user=test password=test dbname=test port=5432 sslmode=disable")
+	conf := config.Get()
+	connStr := conf.GetDBConnStr()
+	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		log.Fatalf("error opening connection : %v", err)
 	}
