@@ -68,6 +68,11 @@ func main() {
 	conn := db.GetDb(conf)
 	beers := readData()
 	beerRepo := beer.NewRepository(conn)
+	dbBeers, _ := beerRepo.GetAll(context.Background())
+	if len(dbBeers) > 0 {
+		fmt.Printf("Beers already exist\n")
+		return
+	}
 	for _, b := range beers {
 		id, err := beerRepo.InsertBeer(context.Background(), beer.MapRequestToInsertParams(b))
 		if err != nil {
