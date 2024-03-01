@@ -6,6 +6,7 @@ import (
 	"beerchampz/pkg/config"
 	"beerchampz/pkg/db"
 	"beerchampz/pkg/router"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,6 +25,9 @@ func main() {
 	beer.AddRouter(conf, database, apiRouter)
 	championship.AddRouter(conf, database, apiRouter)
 	viewApiRouter := r.Group("")
+	viewApiRouter.GET("/", func(ctx *gin.Context) {
+		ctx.Redirect(http.StatusFound, "/beer-champz")
+	})
 	viewApiRouter.GET("/beer-champz", func(ctx *gin.Context) {
 		ctx.HTML(200, "index.html", nil)
 	})
