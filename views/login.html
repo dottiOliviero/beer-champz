@@ -1,0 +1,28 @@
+<html>
+<head>
+	<script src="http://code.jquery.com/jquery-3.1.0.min.js" type="text/javascript"></script>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.7.3/dist/full.css" rel="stylesheet" type="text/css" />
+    <script defer src="/dist/alpinejs.min.js"></script>
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <script src="/dist/htmx.min.js"></script>
+    <script src="/dist/json-enc.js"></script>
+</head>
+<body class="home">
+	<div class="hero min-h-screen" style="background-image: url(https://daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg);">
+		<div class="hero-overlay bg-opacity-60"></div>
+		<div class="hero-content text-center text-neutral-content">
+		  <div class="max-w-md">
+			<h1 class="mb-5 text-5xl font-bold">BeerNautic</h1>
+			<p class="mb-5">Benvenuto nel portale di navigazione della birra!</p>
+			<button class="btn btn-wide bg-amber-400 border-amber-400" hx-get="/login">Login
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="h-6 w-6 "><path d="M32 64c0-17.7 14.3-32 32-32H352c17.7 0 32 14.3 32 32V96h51.2c42.4 0 76.8 34.4 76.8 76.8V274.9c0 30.4-17.9 57.9-45.6 70.2L384 381.7V416c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V64zM384 311.6l56.4-25.1c4.6-2.1 7.6-6.6 7.6-11.7V172.8c0-7.1-5.7-12.8-12.8-12.8H384V311.6zM160 144c0-8.8-7.2-16-16-16s-16 7.2-16 16V368c0 8.8 7.2 16 16 16s16-7.2 16-16V144zm64 0c0-8.8-7.2-16-16-16s-16 7.2-16 16V368c0 8.8 7.2 16 16 16s16-7.2 16-16V144zm64 0c0-8.8-7.2-16-16-16s-16 7.2-16 16V368c0 8.8 7.2 16 16 16s16-7.2 16-16V144z"/></svg>
+			</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+</body>
+</html>
