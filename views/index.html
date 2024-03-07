@@ -15,23 +15,32 @@
 </head>
 
 <body>
-    <div class="flex justify-between h-[40px] w-full bg-gradient-to-r from-amber-500 to-yellow-500">
-        <img src="assets/beer-logo.svg" @click="window.location.href='/beer-champz'"/>
-        <div class="flex gap-4 mr-4">
-            <a class="my-auto hover:cursor-pointer" onclick="window.location.href='/beer-champz'">Champz</a>
-            <a class="my-auto hover:cursor-pointer" hx-get="/beer/ranking" hx-target="#main-screen">Ranking</a>
-            <a class="my-auto hover:cursor-pointer" hx-get="/about" hx-target="#main-screen">About</a>
-        </div>
+    <div class="flex justify-between h-[40px] w-full bg-gradient-to-r from-amber-500 to-yellow-500 px-5">
+        <img src="assets/beer-logo.svg" @click="window.location.href='/home'"/>
+        <ul class="flex gap-4 mr-4">
+            <li class="my-auto hover:cursor-pointer" onclick="window.location.href='/home'">Home</li>
+            <li class="my-auto hover:cursor-pointer" hx-get="/beer/ranking" hx-target="#main-screen">Ranking</li>
+            <li class="my-auto hover:cursor-pointer" hx-get="/about" hx-target="#main-screen">About</li>
+        </ul>
     </div>
     
-    <div class="min-h-screen flex justify-center bg-[url('assets/beer_bkg_2.svg')] bg-cover bg-no-repeat" id="main-screen" x-data="{champId: $persist('new')}">
-        <button :hx-get="`/championship/${champId}`" x-init="$nextTick(() => htmx.process($el))" hx-target="#main-screen" hx-swap
-            class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white" x-text = "if(champId != 'new'){ return 'Continue' } else {return 'Start'}">
-        </button>
+    <div class="min-h-screen hero bg-[url('assets/grain-bkg.svg')] bg-cover bg-no-repeat" id="main-screen" x-data="{champId: $persist('new')}">
+        <div class="hero-overlay bg-opacity-60"></div>
+        <div class="hero-content text-center text-neutral-content">
+            <div class="max-w-lg">
+                <h1 class="text-8xl mb-5">Mondo Birra</h1>
+                <p class="mb-5 text-3xl">Benvenut[a/e/i/o/u] Bir Nauta!</p>
+                <p class="font-light mb-5 leading-6">Il posto giusto per chi naviga il mondo della birra!<br> Inizia creando un birr8! <br></p>
+                <button :hx-get="`/championship/${champId}`" x-init="$nextTick(() => htmx.process($el))" hx-target="#main-screen" hx-swap
+                    class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white" x-text = "if(champId != 'new'){ return 'Continua' } else {return 'Inizia'}">
+                </button>
+                <p class="font-thin mt-2 leading-6">Scopri di più nella sezione <a class="hover:cursor-pointer" hx-get="/about" hx-target="#main-screen">About</a></p>
+            </div>
+        </div>
     </div>
     <footer class="footer footer-center p-3 bg-gradient-to-r from-amber-700 to-orange-400">
         <aside>
-            <p class="">Made with Hops, Barley malt, Water and Yeast</p>
+            <p class="font-light">Made with Hops, Barley malt, Water and Yeast</p>
         </aside>
     </footer>
 </body>
