@@ -24,7 +24,7 @@
         </div>
     </div>
     
-    <div class="h-[860px] flex justify-center bg-[url('assets/beer_bkg_2.svg')] bg-cover bg-no-repeat" id="main-screen" x-data="{champId: $persist('new')}">
+    <div class="min-h-screen flex justify-center bg-[url('assets/beer_bkg_2.svg')] bg-cover bg-no-repeat" id="main-screen" x-data="{champId: $persist('new')}">
         <button :hx-get="`/championship/${champId}`" x-init="$nextTick(() => htmx.process($el))" hx-target="#main-screen" hx-swap
             class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white" x-text = "if(champId != 'new'){ return 'Continue' } else {return 'Start'}">
         </button>
