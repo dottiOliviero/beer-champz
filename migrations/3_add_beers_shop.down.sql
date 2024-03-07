@@ -1,0 +1,1 @@
+ALTER TABLE beers DROP COLUMN shop;

@@ -17,6 +17,7 @@ func mapBeerToBeerDTO(beer beerDB.Beer) Beer {
 		Brewery:   beer.Brewery.String,
 		Image:     beer.Image.String,
 		Score:     int(beer.Score.Int32),
+		Shop:      beer.Shop.String,
 	}
 }
 
@@ -31,5 +32,6 @@ func MapRequestToInsertParams(requestBody Beer) beerDB.InsertBeerParams {
 		Brewery:   pgtype.Text{String: requestBody.Brewery, Valid: true},
 		Image:     pgtype.Text{String: requestBody.Image, Valid: true},
 		Score:     pgtype.Int4{Int32: int32(requestBody.Score), Valid: true},
+		Shop:      pgtype.Text{String: requestBody.Shop, Valid: true},
 	}
 }
