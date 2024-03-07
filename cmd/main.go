@@ -21,14 +21,15 @@ func main() {
 	r.Static("/dist", "./dist")
 	r.LoadHTMLGlob("./views/*.html")
 
-	apiRouter := r.Group("/api")
-	beer.AddRouter(conf, database, apiRouter)
-	championship.AddRouter(conf, database, apiRouter)
+	// apiRouter := r.Group("/api")
+	// beer.AddRouter(conf, database, apiRouter)
+	// championship.AddRouter(conf, database, apiRouter)
+
 	viewApiRouter := r.Group("")
 	viewApiRouter.GET("/", func(ctx *gin.Context) {
-		ctx.Redirect(http.StatusFound, "/beer-champz")
+		ctx.Redirect(http.StatusFound, "/home")
 	})
-	viewApiRouter.GET("/beer-champz", func(ctx *gin.Context) {
+	viewApiRouter.GET("/home", func(ctx *gin.Context) {
 		ctx.HTML(200, "index.html", nil)
 	})
 	viewApiRouter.GET("/about", func(ctx *gin.Context) {

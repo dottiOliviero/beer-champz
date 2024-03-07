@@ -11,6 +11,7 @@ type Beer struct {
 	Brewery   string
 	Image     string
 	Score     int
+	Shop      string
 }
 
 // IsInSlice : check item in slice

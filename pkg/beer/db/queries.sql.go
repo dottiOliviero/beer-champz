@@ -12,7 +12,7 @@ import (
 )
 
 const getAll = `-- name: GetAll :many
-SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score FROM beers order by score DESC
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop FROM beers order by score DESC
 `
 
 func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
@@ -34,6 +34,7 @@ func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
 			&i.Brewery,
 			&i.Image,
 			&i.Score,
+			&i.Shop,
 		); err != nil {
 			return nil, err
 		}
@@ -46,7 +47,7 @@ func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
 }
 
 const insertBeer = `-- name: InsertBeer :one
-INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, score) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id
+INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, score, shop) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id
 `
 
 type InsertBeerParams struct {
@@ -58,6 +59,7 @@ type InsertBeerParams struct {
 	Brewery   pgtype.Text
 	Image     pgtype.Text
 	Score     pgtype.Int4
+	Shop      pgtype.Text
 }
 
 func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, error) {
@@ -70,6 +72,7 @@ func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, 
 		arg.Brewery,
 		arg.Image,
 		arg.Score,
+		arg.Shop,
 	)
 	var id int32
 	err := row.Scan(&id)
@@ -77,7 +80,7 @@ func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, 
 }
 
 const updateBeerScore = `-- name: UpdateBeerScore :one
-UPDATE beers SET score = score + 1 where id = $1 RETURNING id, name, style, sub_style, abv, short_desc, brewery, image, score
+UPDATE beers SET score = score + 1 where id = $1 RETURNING id, name, style, sub_style, abv, short_desc, brewery, image, score, shop
 `
 
 func (q *Queries) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
@@ -93,6 +96,7 @@ func (q *Queries) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
 		&i.Brewery,
 		&i.Image,
 		&i.Score,
+		&i.Shop,
 	)
 	return i, err
 }

@@ -18,6 +18,7 @@ type Beer struct {
 	Brewery   pgtype.Text
 	Image     pgtype.Text
 	Score     pgtype.Int4
+	Shop      pgtype.Text
 }
 
 type Championship struct {
