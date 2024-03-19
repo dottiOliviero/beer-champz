@@ -27,10 +27,10 @@
     <div class="min-h-screen bg-[url('assets/grain-bkg.svg')] bg-cover bg-no-repeat" id="main-screen"
         x-data="{champId: $persist('new')}">
         <div class="hero min-h-screen">
-            <div class="hero-overlay bg-opacity-30"></div>
+            <!-- <div class="hero-overlay bg-opacity-30"></div> -->
             <div class="hero-content text-center text-neutral-content">
-                <div class="max-w-lg">
-                    <h1 class="text-8xl mb-5">Mondo Birra</h1>
+                <div class="max-w-lg text-amber-700 antialiased">
+                    <h1 class="text-8xl mb-5 font-['Brush_Script_MT']">Mondo Birra</h1>
                     <p class="mb-5 text-3xl">Benvenut[a/e/i/o/u] Bir Nauta!</p>
                     <p class="font-light mb-5 leading-6">Il posto giusto per chi naviga il mondo della birra!<br> Inizia
                         creando un birr8! <br></p>
@@ -39,7 +39,7 @@
                         class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white"
                         x-text="if(champId != 'new'){ return 'Continua' } else {return 'Inizia'}">
                     </button>
-                    <p class="font-thin mt-2 leading-6">Scopri di più nella sezione <a class="hover:cursor-pointer"
+                    <p class="font-light mt-5 leading-6">Scopri di più nella sezione <a class="hover:cursor-pointer"
                             hx-get="/about" hx-target="#main-screen">About</a></p>
                 </div>
             </div>
@@ -47,7 +47,7 @@
     </div>
     <footer class="footer footer-center p-3 bg-gradient-to-r from-amber-700 to-orange-400">
         <aside>
-            <p class="font-light">Made with Hops, Barley malt, Water and Yeast</p>
+            <p class="font-light">Fatto con luppolo, malto d'orzo, acqua e lievito</p>
         </aside>
     </footer>
 </body>
