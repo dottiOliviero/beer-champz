@@ -2,8 +2,8 @@ name: Deploy
 
 on:
   push:
-    # tags:
-    #   - "*.*.*"
+    tags:
+      - "*.*.*"
 
 env:
     DB_HOST: kandula.db.elephantsql.com
@@ -11,10 +11,7 @@ env:
     DB_USER: ${{ secrets.DB_USER }}
     DB_PASS: ${{ secrets.DB_PASS }}
     SERVICE_NAME: beerchampz
-
-# build and push the new image
-# stop the execution on the server
-# start the new image on the server
+    SERVICE_ID: srv-cnsmgfen7f5s73dbvo6g
 
 jobs:
 
@@ -41,21 +38,9 @@ jobs:
           push: true
           tags: odotti/${{ env.SERVICE_NAME }}:${{ github.ref_name }}
 
-    stop_server:
-      needs: [build_push]
-      runs-on: ubuntu-latest
-      steps:
-        - name: Stop execution on sever
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_KEY }}
-            script: "sudo docker stop ${{ env.SERVICE_NAME }}"
-
     run_migration:
       runs-on: ubuntu-latest
-      needs: [build_push, stop_server]
+      needs: [build_push]
       steps:
         - uses: actions/checkout@v3
 
@@ -66,14 +51,32 @@ jobs:
         - name: run migration
           run: go run cmd/migrations/main.go -dir up
 
-    start-server:
+    update_image_tag:
       runs-on: ubuntu-latest
       needs: [run_migration]
       steps:
-        - name: Start execution on sever
-          uses: appleboy/ssh-action@v1.0.3
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USER }}
-            key: ${{ secrets.SSH_KEY }}
-            script: "sudo docker run --name ${{ env.SERVICE_NAME }} -it -p --env-file .env 8080 odotti/${{ env.SERVICE_NAME }}:${{ github.ref_name }}"
+        - name: Update image tag
+          run: |
+            curl --request PATCH \
+            --url https://api.render.com/v1/services/${{ env.SERVICE_ID }} \
+            --header 'accept: application/json' \
+            --header 'authorization: Bearer ${{ secrets.RENDER_API_KEY }}' \
+            --header 'content-type: application/json' \
+            --data '
+              {
+                "image": {
+                  "ownerId": "odotti",
+                  "imagePath": "docker.io/odotti/${{ env.SERVICE_NAME }}:${{ github.ref_name }}"
+                }
+              }
+              ' 
+
+    deploy:
+      runs-on: ubuntu-latest
+      needs: [update_image_tag]
+      steps:
+        - name: Deploy
+          env:
+            deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          run: |
+            curl "$deploy_url"
