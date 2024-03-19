@@ -16,6 +16,7 @@ type Config struct {
 	DBUser string
 	DBPass string
 	Logger *zap.Logger
+	Port   string
 }
 
 // Get returns a new Application configuration.
@@ -26,6 +27,10 @@ func Get() *Config {
 	dbHost := os.Getenv("DB_HOST")
 	dbUser := os.Getenv("DB_USER")
 	dbPass := os.Getenv("DB_PASS")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	return &Config{
 		DBName: dbName,
@@ -33,6 +38,7 @@ func Get() *Config {
 		DBUser: dbUser,
 		DBPass: dbPass,
 		Logger: logger,
+		Port:   port,
 	}
 }
 
