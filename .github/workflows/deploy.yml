@@ -15,7 +15,7 @@ jobs:
     run_migration:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v3
+        - uses: actions/checkout@v4
 
         - uses: actions/setup-go@v3
           with:
@@ -30,7 +30,7 @@ jobs:
       runs-on: ubuntu-latest
       steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up docker buildx
         uses: docker/setup-buildx-action@v2
