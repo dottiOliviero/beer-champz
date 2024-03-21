@@ -18,6 +18,7 @@
                     <tr class="bg-amber-100/60">
                         <th>Birra</th>
                         <th>Birrificio</th>
+                        <th>ABV</th>
                         <th>Punteggio</th>
                         <th></th>
                     </tr>
@@ -38,7 +39,8 @@
                                 </div>
                             </div>
                         </td>
-                        <td class>{{ .Brewery }}</td>
+                        <td >{{ .Brewery }}</td>
+                        <td >{{ .ABV }}</td>
                         <td>{{ .Score}}</td>
                     </tr>
                     {{ end }}

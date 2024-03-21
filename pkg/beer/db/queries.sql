@@ -3,7 +3,7 @@ INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, scor
 
 
 -- name: GetAll :many
-SELECT * FROM beers order by score DESC;
+SELECT * FROM beers order by score DESC, name ASC;
 
 
 -- name: UpdateBeerScore :one
