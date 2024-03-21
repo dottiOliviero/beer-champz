@@ -24,11 +24,11 @@
         }
     </style>
     <div class="grid grid-cols-7 gap-2 place-items-center"
-        x-data="{open: false, activeRound: {}, activeBeer: {}, finalOpen: {{ .WinnerID}} != 0, champId: $persist({{ .ID }}) }"
-        x-init="champId = {{ .ID }} ">
+        x-data="{activeRound: {}, activeBeer: {}, champId: $persist({{ .ID }}) }"
+        x-init="champId = {{ .ID }} ; if({{ .WinnerID }} !=0){final_modal.showModal()}">
         <!-- quarti -->
         <div class="grid mt-2 grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer h-[120px] w-[150px]"
-            @click="if({{ .Quarter1.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter1.ID }}', 'left': {'id': {{ .Quarter1.Left.ID }}, 'name': '{{ .Quarter1.Left.Name }}', 'style': '{{ .Quarter1.Left.Style }}', 'brewery': '{{ .Quarter1.Left.Brewery }}', 'abv': '{{ .Quarter1.Left.ABV }}', 'desc': '{{ .Quarter1.Left.ShortDesc }}', 'shop': '{{ .Quarter1.Left.Shop }}' }, 'right': {'id': {{ .Quarter1.Right.ID }}, 'name': '{{ .Quarter1.Right.Name }}', 'style': '{{ .Quarter1.Right.Style }}', 'brewery': '{{ .Quarter1.Right.Brewery }}', 'abv': '{{ .Quarter1.Right.ABV }}', 'desc': '{{ .Quarter1.Right.ShortDesc }}', 'shop': '{{ .Quarter1.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Quarter1.IsActive }}){beer_compare_modal.showModal(); activeRound = {'id': '{{ .Quarter1.ID }}', 'left': {'id': {{ .Quarter1.Left.ID }}, 'name': '{{ .Quarter1.Left.Name }}', 'style': '{{ .Quarter1.Left.Style }}', 'brewery': '{{ .Quarter1.Left.Brewery }}', 'abv': '{{ .Quarter1.Left.ABV }}', 'desc': '{{ .Quarter1.Left.ShortDesc }}', 'shop': '{{ .Quarter1.Left.Shop }}' }, 'right': {'id': {{ .Quarter1.Right.ID }}, 'name': '{{ .Quarter1.Right.Name }}', 'style': '{{ .Quarter1.Right.Style }}', 'brewery': '{{ .Quarter1.Right.Brewery }}', 'abv': '{{ .Quarter1.Right.ABV }}', 'desc': '{{ .Quarter1.Right.ShortDesc }}', 'shop': '{{ .Quarter1.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center"
                 :class="{{ .Quarter1.WinnerID }} == {{ .Quarter1.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Quarter1.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -46,7 +46,7 @@
 
         <div class="mt-2 bg-transparent col-span-1"></div>
         <div class="mt-2 grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer h-[120px] w-[150px]"
-            @click="if({{ .Quarter4.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter4.ID }}',  'left': {'id': {{ .Quarter4.Left.ID }}, 'name': '{{ .Quarter4.Left.Name }}', 'style': '{{ .Quarter4.Left.Style }}', 'brewery': '{{ .Quarter4.Left.Brewery }}', 'abv': '{{ .Quarter4.Left.ABV }}', 'desc': '{{ .Quarter4.Left.ShortDesc }}', 'shop': '{{ .Quarter4.Left.Shop }}' }, 'right': {'id': {{ .Quarter4.Right.ID }}, 'name': '{{ .Quarter4.Right.Name }}', 'style': '{{ .Quarter4.Right.Style }}', 'brewery': '{{ .Quarter4.Right.Brewery }}', 'abv': '{{ .Quarter4.Right.ABV }}', 'desc': '{{ .Quarter4.Right.ShortDesc }}', 'shop': '{{ .Quarter4.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Quarter4.IsActive }}){beer_compare_modal.showModal(); activeRound = {'id': '{{ .Quarter4.ID }}',  'left': {'id': {{ .Quarter4.Left.ID }}, 'name': '{{ .Quarter4.Left.Name }}', 'style': '{{ .Quarter4.Left.Style }}', 'brewery': '{{ .Quarter4.Left.Brewery }}', 'abv': '{{ .Quarter4.Left.ABV }}', 'desc': '{{ .Quarter4.Left.ShortDesc }}', 'shop': '{{ .Quarter4.Left.Shop }}' }, 'right': {'id': {{ .Quarter4.Right.ID }}, 'name': '{{ .Quarter4.Right.Name }}', 'style': '{{ .Quarter4.Right.Style }}', 'brewery': '{{ .Quarter4.Right.Brewery }}', 'abv': '{{ .Quarter4.Right.ABV }}', 'desc': '{{ .Quarter4.Right.ShortDesc }}', 'shop': '{{ .Quarter4.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center"
                 :class="{{ .Quarter4.WinnerID }} == {{ .Quarter4.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Quarter4.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -67,7 +67,7 @@
         <div class="col-span-2 rounded-xl bg-transparent"></div>
 
         <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-400 my-1 hover:cursor-pointer h-[150px] w-[180px]"
-            @click="if({{ .Semi1.IsActive }}){open = true ; activeRound = {'id': '{{ .Semi1.ID }}',  'left': {'id': {{ .Semi1.Left.ID }}, 'name': '{{ .Semi1.Left.Name }}', 'style': '{{ .Semi1.Left.Style }}', 'brewery': '{{ .Semi1.Left.Brewery }}', 'abv': '{{ .Semi1.Left.ABV }}', 'desc': '{{ .Semi1.Left.ShortDesc }}', 'shop': '{{ .Semi1.Left.Shop }}' }, 'right': {'id': {{ .Semi1.Right.ID }}, 'name': '{{ .Semi1.Right.Name }}', 'style': '{{ .Semi1.Right.Style }}', 'brewery': '{{ .Semi1.Right.Brewery }}', 'abv': '{{ .Semi1.Right.ABV }}', 'desc': '{{ .Semi1.Right.ShortDesc }}', 'shop': '{{ .Semi1.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Semi1.IsActive }}){beer_compare_modal.showModal(); activeRound = {'id': '{{ .Semi1.ID }}',  'left': {'id': {{ .Semi1.Left.ID }}, 'name': '{{ .Semi1.Left.Name }}', 'style': '{{ .Semi1.Left.Style }}', 'brewery': '{{ .Semi1.Left.Brewery }}', 'abv': '{{ .Semi1.Left.ABV }}', 'desc': '{{ .Semi1.Left.ShortDesc }}', 'shop': '{{ .Semi1.Left.Shop }}' }, 'right': {'id': {{ .Semi1.Right.ID }}, 'name': '{{ .Semi1.Right.Name }}', 'style': '{{ .Semi1.Right.Style }}', 'brewery': '{{ .Semi1.Right.Brewery }}', 'abv': '{{ .Semi1.Right.ABV }}', 'desc': '{{ .Semi1.Right.ShortDesc }}', 'shop': '{{ .Semi1.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center "
                 :class="{{ .Semi1.WinnerID }} == {{ .Semi1.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Semi1.Left.ID}}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -88,7 +88,7 @@
         <!-- finale -->
         <div class="rounded-xl bg-transparent"></div>
         <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-5 rounded-xl bg-orange-600 my-1 hover:cursor-pointer h-[180px] w-[280px]"
-            @click="if({{ .Final.IsActive }}){open = true ; activeRound = {'id': '{{ .Final.ID }}',  'left': {'id': {{ .Final.Left.ID }}, 'name': '{{ .Final.Left.Name }}', 'style': '{{ .Final.Left.Style }}', 'brewery': '{{ .Final.Left.Brewery }}', 'abv': '{{ .Final.Left.ABV }}', 'desc': '{{ .Final.Left.ShortDesc }}', 'shop': '{{ .Final.Right.Shop }}' }, 'right': {'id': {{ .Final.Right.ID }}, 'name': '{{ .Final.Right.Name }}', 'style': '{{ .Final.Right.Style }}', 'brewery': '{{ .Final.Right.Brewery }}', 'abv': '{{ .Final.Right.ABV }}', 'desc': '{{ .Final.Right.ShortDesc }}', 'shop': '{{ .Final.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Final.IsActive }}){beer_compare_modal.showModal(); activeRound = {'id': '{{ .Final.ID }}',  'left': {'id': {{ .Final.Left.ID }}, 'name': '{{ .Final.Left.Name }}', 'style': '{{ .Final.Left.Style }}', 'brewery': '{{ .Final.Left.Brewery }}', 'abv': '{{ .Final.Left.ABV }}', 'desc': '{{ .Final.Left.ShortDesc }}', 'shop': '{{ .Final.Right.Shop }}' }, 'right': {'id': {{ .Final.Right.ID }}, 'name': '{{ .Final.Right.Name }}', 'style': '{{ .Final.Right.Style }}', 'brewery': '{{ .Final.Right.Brewery }}', 'abv': '{{ .Final.Right.ABV }}', 'desc': '{{ .Final.Right.ShortDesc }}', 'shop': '{{ .Final.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center">
                 <img src="assets/{{ .Final.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
                     class="beer-image" />
@@ -107,7 +107,7 @@
         <!-- semifinale -->
         <div class="col-span-2 rounded-xl bg-transparent"></div>
         <div class="grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)] col-span-3 bg-orange-400 rounded-xl my-1 hover:cursor-pointer h-[150px] w-[180px]"
-            @click="if({{ .Semi2.IsActive }}){open = true ; activeRound = {'id': '{{ .Semi2.ID }}',  'left': {'id': {{ .Semi2.Left.ID }}, 'name': '{{ .Semi2.Left.Name }}', 'style': '{{ .Semi2.Left.Style }}', 'brewery': '{{ .Semi2.Left.Brewery }}', 'abv': '{{ .Semi2.Left.ABV }}', 'desc': '{{ .Semi2.Left.ShortDesc }}', 'shop': '{{ .Semi2.Left.Shop }}' }, 'right': {'id': {{ .Semi2.Right.ID }}, 'name': '{{ .Semi2.Right.Name }}', 'style': '{{ .Semi2.Right.Style }}', 'brewery': '{{ .Semi2.Right.Brewery }}', 'abv': '{{ .Semi2.Right.ABV }}', 'desc': '{{ .Semi2.Right.ShortDesc }}', 'shop': '{{ .Semi2.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Semi2.IsActive }}){beer_compare_modal.showModal(); activeRound = {'id': '{{ .Semi2.ID }}',  'left': {'id': {{ .Semi2.Left.ID }}, 'name': '{{ .Semi2.Left.Name }}', 'style': '{{ .Semi2.Left.Style }}', 'brewery': '{{ .Semi2.Left.Brewery }}', 'abv': '{{ .Semi2.Left.ABV }}', 'desc': '{{ .Semi2.Left.ShortDesc }}', 'shop': '{{ .Semi2.Left.Shop }}' }, 'right': {'id': {{ .Semi2.Right.ID }}, 'name': '{{ .Semi2.Right.Name }}', 'style': '{{ .Semi2.Right.Style }}', 'brewery': '{{ .Semi2.Right.Brewery }}', 'abv': '{{ .Semi2.Right.ABV }}', 'desc': '{{ .Semi2.Right.ShortDesc }}', 'shop': '{{ .Semi2.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center "
                 :class="{{ .Semi2.WinnerID }} == {{ .Semi2.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Semi2.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -127,7 +127,7 @@
 
         <!-- quarti -->
         <div class="mb-2 grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer  h-[120px] w-[150px]"
-            @click="if({{ .Quarter2.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter2.ID }}',  'left': {'id': {{ .Quarter2.Left.ID }}, 'name': '{{ .Quarter2.Left.Name }}', 'style': '{{ .Quarter2.Left.Style }}', 'brewery': '{{ .Quarter2.Left.Brewery }}', 'abv': '{{ .Quarter2.Left.ABV }}', 'desc': '{{ .Quarter2.Left.ShortDesc }}', 'shop': '{{ .Quarter2.Left.Shop }}' }, 'right': {'id': {{ .Quarter2.Right.ID }}, 'name': '{{ .Quarter2.Right.Name }}', 'style': '{{ .Quarter2.Right.Style }}', 'brewery': '{{ .Quarter2.Right.Brewery }}', 'abv': '{{ .Quarter2.Right.ABV }}', 'desc': '{{ .Quarter2.Right.ShortDesc }}', 'shop': '{{ .Quarter2.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Quarter2.IsActive }}){ beer_compare_modal.showModal() ; activeRound = {'id': '{{ .Quarter2.ID }}',  'left': {'id': {{ .Quarter2.Left.ID }}, 'name': '{{ .Quarter2.Left.Name }}', 'style': '{{ .Quarter2.Left.Style }}', 'brewery': '{{ .Quarter2.Left.Brewery }}', 'abv': '{{ .Quarter2.Left.ABV }}', 'desc': '{{ .Quarter2.Left.ShortDesc }}', 'shop': '{{ .Quarter2.Left.Shop }}' }, 'right': {'id': {{ .Quarter2.Right.ID }}, 'name': '{{ .Quarter2.Right.Name }}', 'style': '{{ .Quarter2.Right.Style }}', 'brewery': '{{ .Quarter2.Right.Brewery }}', 'abv': '{{ .Quarter2.Right.ABV }}', 'desc': '{{ .Quarter2.Right.ShortDesc }}', 'shop': '{{ .Quarter2.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center "
                 :class="{{ .Quarter2.WinnerID }} == {{ .Quarter2.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Quarter2.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -145,7 +145,7 @@
 
         <div class="mb-2 col-span-1 bg-transparent"></div>
         <div class="mb-2 grid grid-cols-[minmax(0,_1fr)_20px_minmax(0,_1fr)]  col-span-3 rounded-xl bg-orange-200 hover:cursor-pointer  h-[120px] w-[150px]"
-            @click="if({{ .Quarter3.IsActive }}){open = true ; activeRound = {'id': '{{ .Quarter3.ID }}',  'left': {'id': {{ .Quarter3.Left.ID }}, 'name': '{{ .Quarter3.Left.Name }}', 'style': '{{ .Quarter3.Left.Style }}', 'brewery': '{{ .Quarter3.Left.Brewery }}', 'abv': '{{ .Quarter3.Left.ABV }}', 'desc': '{{ .Quarter3.Left.ShortDesc }}', 'shop': '{{ .Quarter3.Left.Shop }}' }, 'right': {'id': {{ .Quarter3.Right.ID }}, 'name': '{{ .Quarter3.Right.Name }}', 'style': '{{ .Quarter3.Right.Style }}', 'brewery': '{{ .Quarter3.Right.Brewery }}', 'abv': '{{ .Quarter3.Right.ABV }}', 'desc': '{{ .Quarter3.Right.ShortDesc }}', 'shop': '{{ .Quarter3.Right.Shop }}' } } ; activeBeer = activeRound.left}">
+            @click="if({{ .Quarter3.IsActive }}){ beer_compare_modal.showModal() ; activeRound = {'id': '{{ .Quarter3.ID }}',  'left': {'id': {{ .Quarter3.Left.ID }}, 'name': '{{ .Quarter3.Left.Name }}', 'style': '{{ .Quarter3.Left.Style }}', 'brewery': '{{ .Quarter3.Left.Brewery }}', 'abv': '{{ .Quarter3.Left.ABV }}', 'desc': '{{ .Quarter3.Left.ShortDesc }}', 'shop': '{{ .Quarter3.Left.Shop }}' }, 'right': {'id': {{ .Quarter3.Right.ID }}, 'name': '{{ .Quarter3.Right.Name }}', 'style': '{{ .Quarter3.Right.Style }}', 'brewery': '{{ .Quarter3.Right.Brewery }}', 'abv': '{{ .Quarter3.Right.ABV }}', 'desc': '{{ .Quarter3.Right.ShortDesc }}', 'shop': '{{ .Quarter3.Right.Shop }}' } } ; activeBeer = activeRound.left}">
             <div class="flex flex-col justify-center "
                 :class="{{ .Quarter3.WinnerID }} == {{ .Quarter3.Right.ID }} && 'opacity-30'">
                 <img src="assets/{{ .Quarter3.Left.ID }}.png" onerror="this.src='assets/beer_placeholder.svg'"
@@ -163,13 +163,11 @@
         <!-- quarti -->
 
         <!-- dialog modal -->
-        <div class="flex flex-col justify-center block fixed top-0 left-0 z-10 w-full h-full overflow-auto bg-stone-500/75"
-            x-show="open" x-transition.duration.500ms>
-            <div class="modal-content bg-[url('assets/grain-bkg.svg')] bg-cover bg-no-repeat px-5 w-100 rounded-md">
-
-                <button type="button" class="close float-right" x-on:click="open = false">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+        <dialog class="modal" id="beer_compare_modal">
+            <div class="modal-box bg-[url('assets/grain-bkg.svg')] bg-cover bg-no-repeat">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
                 <div class="flex my-2 justify-center">
                     <div class="join grid grid-cols-2" x-data="{'active' : true}">
                         <button @click="activeBeer = activeRound.left"
@@ -226,10 +224,12 @@
                                     stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
                             <p class="font-bold px-1">Shop: </p>
-                            <a x-bind:href="activeBeer.shop" x-text="activeBeer.shop" @click="window.open(activeBeer.shop, '_blank')"></a>
+                            <a x-bind:href="activeBeer.shop" x-text="activeBeer.shop"
+                                @click="window.open(activeBeer.shop, '_blank')"></a>
                         </div>
                     </div>
-                    <div class="flex row-span-2 card bg-slate-200/70 shadow-xl p-3 justify-center" x-text="activeBeer.desc"></div>
+                    <div class="flex row-span-2 card bg-slate-200/70 shadow-xl p-3 justify-center"
+                        x-text="activeBeer.desc"></div>
                 </div>
                 <form>
                     <div class="flex mb-2">
@@ -237,24 +237,23 @@
                         <input type="number" name="winnerID" x-model="activeBeer.id" hidden />
                         <button type="submit" hx-post="/championship/{{.ID}}" hx-ext="json-enc" hx-target="#main-screen"
                             hx-swap class="mx-auto rounded-xl bg-orange-900 text-white w-[20%]"
-                            @click="open = false">Vote
+                            @click="if({{ .WinnerID }} != 0){openFinal = true}">Vote
                         </button>
                     </div>
                 </form>
             </div>
-        </div>
+        </dialog>
         <!-- winner modal -->
-        <div class="flex flex-col justify-center block fixed top-0 left-0 z-12 w-full h-full overflow-auto bg-[url('assets/hops-bkg.svg')]"
-            x-show="{{ .WinnerID }} != 0" x-transition.duration.500ms>
-            <div class="modal-content flex flex-col justify-center bg-slate-50 px-5 w-100 rounded-md">
-                <p class="mx-auto p-3">La birra vincitrice è {{ .WinnerName }} !</p>
-                <div class="max-w-md h-[370px] mx-auto rounded-md bg-amber-600 shadow-xl">
-                    <img src="assets/{{ .WinnerID }}.png" class="h-full" />
-                </div>
-                <button class="mx-auto my-2 rounded-xl w-[80px] bg-amber-600"
-                    @click="champId='new'; window.location.href='/home'">Home</button>
+        <dialog class="modal" id="final_modal">
+            <div class="flex flex-col justify-center modal-box bg-[url('assets/hops-bkg.svg')] bg-cover bg-no-repeat">
+                    <p class="mx-auto p-3 text-2xl font-bold">La birra vincitrice è {{ .WinnerName }} !</p>
+                    <div class="max-w-md h-[370px] mx-auto rounded-md bg-transparent">
+                        <img src="assets/{{ .WinnerID }}.png" class="h-full" />
+                    </div>
+                    <button class="mx-auto my-2 rounded-xl w-[80px] bg-lime-700"
+                        @click="champId='new'; window.location.href='/home'">Home</button>
             </div>
-        </div>
+        </dialog>
     </div>
 
 </body>
