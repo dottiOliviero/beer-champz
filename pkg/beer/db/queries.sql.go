@@ -12,7 +12,7 @@ import (
 )
 
 const getAll = `-- name: GetAll :many
-SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop FROM beers order by score DESC
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop FROM beers order by score DESC, name ASC
 `
 
 func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
