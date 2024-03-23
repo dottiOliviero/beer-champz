@@ -3,7 +3,10 @@ package championship
 import (
 	"beerchampz/pkg/beer"
 	championshipDB "beerchampz/pkg/championship/db"
+	"beerchampz/pkg/common"
 	"encoding/json"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 func mapDBToChampioship(championship championshipDB.Championship) (*Championship, error) {
@@ -25,6 +28,17 @@ func mapRoundsToDB(rounds []Round) ([]byte, error) {
 		return nil, err
 	}
 	return r, nil
+}
+
+func mapToChampionshipInsertParams(rounds []Round, family common.Family) (championshipDB.InsertChampionshipParams, error) {
+	mappedRound, err := mapRoundsToDB(rounds)
+	if err != nil {
+		return championshipDB.InsertChampionshipParams{}, err
+	}
+	return championshipDB.InsertChampionshipParams{
+		Rounds: mappedRound,
+		Family: pgtype.Text{String: string(family), Valid: true},
+	}, nil
 }
 
 func getRoundById(rounds []Round, ID string) Round {

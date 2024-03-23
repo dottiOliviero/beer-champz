@@ -12,7 +12,7 @@ import (
 )
 
 const getAll = `-- name: GetAll :many
-SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop FROM beers order by score DESC, name ASC
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop, family FROM beers order by score DESC, name ASC
 `
 
 func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
@@ -35,6 +35,43 @@ func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
 			&i.Image,
 			&i.Score,
 			&i.Shop,
+			&i.Family,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getAllByFamily = `-- name: GetAllByFamily :many
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop, family FROM beers where family = $1 order by score DESC, name ASC
+`
+
+func (q *Queries) GetAllByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error) {
+	rows, err := q.db.Query(ctx, getAllByFamily, family)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Beer
+	for rows.Next() {
+		var i Beer
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Style,
+			&i.SubStyle,
+			&i.Abv,
+			&i.ShortDesc,
+			&i.Brewery,
+			&i.Image,
+			&i.Score,
+			&i.Shop,
+			&i.Family,
 		); err != nil {
 			return nil, err
 		}
@@ -47,7 +84,7 @@ func (q *Queries) GetAll(ctx context.Context) ([]Beer, error) {
 }
 
 const insertBeer = `-- name: InsertBeer :one
-INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, score, shop) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id
+INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, score, shop, family) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id
 `
 
 type InsertBeerParams struct {
@@ -60,6 +97,7 @@ type InsertBeerParams struct {
 	Image     pgtype.Text
 	Score     pgtype.Int4
 	Shop      pgtype.Text
+	Family    pgtype.Text
 }
 
 func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, error) {
@@ -73,6 +111,7 @@ func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, 
 		arg.Image,
 		arg.Score,
 		arg.Shop,
+		arg.Family,
 	)
 	var id int32
 	err := row.Scan(&id)
@@ -80,7 +119,7 @@ func (q *Queries) InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, 
 }
 
 const updateBeerScore = `-- name: UpdateBeerScore :one
-UPDATE beers SET score = score + 1 where id = $1 RETURNING id, name, style, sub_style, abv, short_desc, brewery, image, score, shop
+UPDATE beers SET score = score + 1 where id = $1 RETURNING id, name, style, sub_style, abv, short_desc, brewery, image, score, shop, family
 `
 
 func (q *Queries) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
@@ -97,6 +136,7 @@ func (q *Queries) UpdateBeerScore(ctx context.Context, id int32) (Beer, error) {
 		&i.Image,
 		&i.Score,
 		&i.Shop,
+		&i.Family,
 	)
 	return i, err
 }

@@ -235,7 +235,7 @@
                     <div class="flex mb-2">
                         <input type="text" name="roundID" x-model="activeRound.id" hidden />
                         <input type="number" name="winnerID" x-model="activeBeer.id" hidden />
-                        <button type="submit" hx-post="/championship/{{.ID}}" hx-ext="json-enc" hx-target="#main-screen"
+                        <button type="submit" hx-put="/championship/{{.ID}}" hx-ext="json-enc" hx-target="#main-screen"
                             hx-swap class="mx-auto rounded-xl bg-orange-900 text-white w-[20%]"
                             @click="if({{ .WinnerID }} != 0){openFinal = true}">Vote
                         </button>

@@ -10,7 +10,7 @@ import (
 
 type Querier interface {
 	GetByID(ctx context.Context, id int32) (Championship, error)
-	InsertChampionship(ctx context.Context, rounds []byte) (Championship, error)
+	InsertChampionship(ctx context.Context, arg InsertChampionshipParams) (Championship, error)
 	UpdateChampionship(ctx context.Context, arg UpdateChampionshipParams) (Championship, error)
 }
 

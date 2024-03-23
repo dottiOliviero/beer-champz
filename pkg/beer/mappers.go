@@ -2,6 +2,7 @@ package beer
 
 import (
 	beerDB "beerchampz/pkg/beer/db"
+	"beerchampz/pkg/common"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -34,4 +35,8 @@ func MapRequestToInsertParams(requestBody Beer) beerDB.InsertBeerParams {
 		Score:     pgtype.Int4{Int32: int32(requestBody.Score), Valid: true},
 		Shop:      pgtype.Text{String: requestBody.Shop, Valid: true},
 	}
+}
+
+func MapFamily(family common.Family) pgtype.Text {
+	return pgtype.Text{String: string(family), Valid: true}
 }

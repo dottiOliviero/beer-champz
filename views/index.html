@@ -34,16 +34,45 @@
                     <p class="mb-5 text-3xl">Benvenut[a/e/i/o/u] Bir Nauta!</p>
                     <p class="font-light mb-5 leading-6">Il posto giusto per chi naviga il mondo della birra!<br> Inizia
                         creando un birr8! <br></p>
-                    <button :hx-get="`/championship/${champId}`" x-init="$nextTick(() => htmx.process($el))"
-                        hx-target="#main-screen" hx-swap
-                        class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white"
-                        x-text="if(champId != 'new'){ return 'Continua' } else {return 'Inizia'}">
-                    </button>
-                    <p class="font-light mt-5 leading-6">Scopri di più nella sezione <a class="hover:cursor-pointer"
+                    <template x-if="champId == 'new'">
+                        <button class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white"
+                            @click="choice_modal.showModal()">
+                            Crea un birr8!
+                        </button>
+                    </template>
+                    <template x-if="champId != 'new'">
+                        <button :hx-get="`/championship/${champId}`" x-init="$nextTick(() => htmx.process($el))"
+                            hx-target="#main-screen" hx-swap
+                            class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white" >
+                            Continua
+                        </button>
+                    </template>
+                        <p class="font-light mt-5 leading-6">Scopri di più nella sezione <a class="hover:cursor-pointer"
                             hx-get="/about" hx-target="#main-screen">About</a></p>
                 </div>
             </div>
         </div>
+        <!-- choice modal -->
+        <dialog class="modal" id="choice_modal">
+            <div class="flex flex-col max-w-md justify-center modal-box bg-orange-400 bg-cover bg-no-repeat">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <p class="mx-auto p-3 mb-3 text-xl font-bold text-amber-700">Scegli il tuo stile preferito</p>
+                <form>
+                    <div class="flex flex-col">
+                        <select class="rounded-xl w-[150px] mx-auto m-2 text-center" name="family">
+                            <option value="ipa">English Pale Ale</option>
+                            <option value="frumento">Birre di Frumento</option>
+                        </select>
+                        <button hx-post="/championship/new" type="submit" hx-target="#main-screen" hx-swap
+                            hx-ext="json-enc" class="rounded-xl bg-amber-700 w-[150px] h-[50px] m-auto text-white"
+                            x-text="if(champId != 'new'){ return 'Continua' } else {return 'Inizia'}">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
     </div>
     <footer class="footer footer-center p-3 bg-gradient-to-r from-amber-700 to-orange-400">
         <aside>
