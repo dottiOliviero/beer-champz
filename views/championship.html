@@ -224,7 +224,7 @@
                                     stroke="#1C274C" stroke-width="1.5" stroke-linecap="round" />
                             </svg>
                             <p class="font-bold px-1">Shop: </p>
-                            <a x-bind:href="activeBeer.shop" x-text="activeBeer.shop"
+                            <a x-text="activeBeer.brewery + ' shop'" class="underline hover:cursor-pointer"
                                 @click="window.open(activeBeer.shop, '_blank')"></a>
                         </div>
                     </div>
