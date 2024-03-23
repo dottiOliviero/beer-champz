@@ -6,10 +6,13 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	GetAll(ctx context.Context) ([]Beer, error)
+	GetAllByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error)
 	InsertBeer(ctx context.Context, arg InsertBeerParams) (int32, error)
 	UpdateBeerScore(ctx context.Context, id int32) (Beer, error)
 }

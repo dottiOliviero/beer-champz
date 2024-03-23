@@ -2,6 +2,7 @@ package championship
 
 import (
 	beer "beerchampz/pkg/beer"
+	common "beerchampz/pkg/common"
 )
 
 // Championship model
@@ -9,6 +10,7 @@ type Championship struct {
 	ID       int
 	WinnerID int32
 	Rounds   []Round
+	Family   common.Family
 }
 
 type ChampionshipEnhanced struct {

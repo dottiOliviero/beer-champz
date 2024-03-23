@@ -19,10 +19,12 @@ type Beer struct {
 	Image     pgtype.Text
 	Score     pgtype.Int4
 	Shop      pgtype.Text
+	Family    pgtype.Text
 }
 
 type Championship struct {
 	ID       int32
 	Winnerid pgtype.Int4
 	Rounds   []byte
+	Family   pgtype.Text
 }

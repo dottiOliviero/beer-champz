@@ -4,6 +4,7 @@ import (
 	beerDB "beerchampz/pkg/beer/db"
 	"context"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -17,6 +18,7 @@ type repository struct {
 type Repository interface {
 	Close()
 	GetAll(ctx context.Context) ([]Beer, error)
+	GetAllBeersByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error)
 	InsertBeer(ctx context.Context, params beerDB.InsertBeerParams) (int32, error)
 	UpdateBeerScore(ctx context.Context, id int32) (Beer, error)
 }
@@ -57,4 +59,16 @@ func (r *repository) UpdateBeerScore(ctx context.Context, id int32) (Beer, error
 		return Beer{}, err
 	}
 	return mapBeerToBeerDTO(beer), nil
+}
+
+func (r *repository) GetAllBeersByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error) {
+	beers, err := r.querier.GetAllByFamily(ctx, family)
+	if err != nil {
+		return nil, err
+	}
+	var res []Beer
+	for _, beer := range beers {
+		res = append(res, mapBeerToBeerDTO(beer))
+	}
+	return res, nil
 }

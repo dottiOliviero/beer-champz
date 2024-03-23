@@ -1,5 +1,5 @@
 -- name: InsertChampionship :one
-INSERT INTO championship (rounds) Values ($1) RETURNING *;
+INSERT INTO championship (rounds, family) Values ($1, $2) RETURNING *;
 
 -- name: GetByID :one
 SELECT * from championship where ID = $1;

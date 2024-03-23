@@ -12,29 +12,44 @@ import (
 )
 
 const getByID = `-- name: GetByID :one
-SELECT id, winnerid, rounds from championship where ID = $1
+SELECT id, winnerid, rounds, family from championship where ID = $1
 `
 
 func (q *Queries) GetByID(ctx context.Context, id int32) (Championship, error) {
 	row := q.db.QueryRow(ctx, getByID, id)
 	var i Championship
-	err := row.Scan(&i.ID, &i.Winnerid, &i.Rounds)
+	err := row.Scan(
+		&i.ID,
+		&i.Winnerid,
+		&i.Rounds,
+		&i.Family,
+	)
 	return i, err
 }
 
 const insertChampionship = `-- name: InsertChampionship :one
-INSERT INTO championship (rounds) Values ($1) RETURNING id, winnerid, rounds
+INSERT INTO championship (rounds, family) Values ($1, $2) RETURNING id, winnerid, rounds, family
 `
 
-func (q *Queries) InsertChampionship(ctx context.Context, rounds []byte) (Championship, error) {
-	row := q.db.QueryRow(ctx, insertChampionship, rounds)
+type InsertChampionshipParams struct {
+	Rounds []byte
+	Family pgtype.Text
+}
+
+func (q *Queries) InsertChampionship(ctx context.Context, arg InsertChampionshipParams) (Championship, error) {
+	row := q.db.QueryRow(ctx, insertChampionship, arg.Rounds, arg.Family)
 	var i Championship
-	err := row.Scan(&i.ID, &i.Winnerid, &i.Rounds)
+	err := row.Scan(
+		&i.ID,
+		&i.Winnerid,
+		&i.Rounds,
+		&i.Family,
+	)
 	return i, err
 }
 
 const updateChampionship = `-- name: UpdateChampionship :one
-UPDATE championship set winnerID = $2, rounds = $3 where id = $1 RETURNING id, winnerid, rounds
+UPDATE championship set winnerID = $2, rounds = $3 where id = $1 RETURNING id, winnerid, rounds, family
 `
 
 type UpdateChampionshipParams struct {
@@ -46,6 +61,11 @@ type UpdateChampionshipParams struct {
 func (q *Queries) UpdateChampionship(ctx context.Context, arg UpdateChampionshipParams) (Championship, error) {
 	row := q.db.QueryRow(ctx, updateChampionship, arg.ID, arg.Winnerid, arg.Rounds)
 	var i Championship
-	err := row.Scan(&i.ID, &i.Winnerid, &i.Rounds)
+	err := row.Scan(
+		&i.ID,
+		&i.Winnerid,
+		&i.Rounds,
+		&i.Family,
+	)
 	return i, err
 }

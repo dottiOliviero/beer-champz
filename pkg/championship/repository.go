@@ -17,7 +17,7 @@ type repository struct {
 type Repository interface {
 	Close()
 	GetByID(ctx context.Context, id int32) (Championship, error)
-	InsertChampionship(ctx context.Context, rounds []byte) (Championship, error)
+	InsertChampionship(ctx context.Context, params championshipDB.InsertChampionshipParams) (Championship, error)
 	UpdateChampionship(ctx context.Context, arg championshipDB.UpdateChampionshipParams) (Championship, error)
 }
 
@@ -43,8 +43,8 @@ func (r *repository) GetByID(ctx context.Context, id int32) (Championship, error
 	return *championship, nil
 }
 
-func (r *repository) InsertChampionship(ctx context.Context, rounds []byte) (Championship, error) {
-	c, err := r.querier.InsertChampionship(ctx, rounds)
+func (r *repository) InsertChampionship(ctx context.Context, params championshipDB.InsertChampionshipParams) (Championship, error) {
+	c, err := r.querier.InsertChampionship(ctx, params)
 	if err != nil {
 		return Championship{}, err
 	}
