@@ -1,5 +1,7 @@
 package beer
 
+import "beerchampz/pkg/common"
+
 // Beer model of beer
 type Beer struct {
 	ID        int
@@ -12,6 +14,7 @@ type Beer struct {
 	Image     string
 	Score     int
 	Shop      string
+	Family    common.Family
 }
 
 // IsInSlice : check item in slice

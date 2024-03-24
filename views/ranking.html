@@ -20,7 +20,7 @@
                         <th>Birrificio</th>
                         <th>ABV</th>
                         <th>Punteggio</th>
-                        <th></th>
+                        <th>Stile</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,6 +42,11 @@
                         <td >{{ .Brewery }}</td>
                         <td >{{ .ABV }}</td>
                         <td>{{ .Score}}</td>
+                        {{if eq .Family "frumento"}}
+                            <td>Birra di Frumento</td>
+                        {{else}}
+                            <td>English Pale Ale</td>
+                        {{end}}
                     </tr>
                     {{ end }}
                 </tbody>

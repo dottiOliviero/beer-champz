@@ -1,6 +1,7 @@
 package beer
 
 import (
+	"beerchampz/pkg/common"
 	"beerchampz/pkg/config"
 	"encoding/json"
 	"io"
@@ -52,11 +53,16 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 	beerRepository := NewRepository(db)
 
 	route.GET("/ranking", func(ctx *gin.Context) {
-		beers, err := beerRepository.GetAll(ctx)
+		ipaBeers, err := beerRepository.GetAllBeersByFamilyLimit(ctx, MapToGetAllByFamilyParams(common.IPA, 5))
 		if err != nil {
 			ctx.String(http.StatusInternalServerError, "Error while getting beers")
 			return
 		}
-		ctx.HTML(200, "ranking.html", beers)
+		frumentoBeers, err := beerRepository.GetAllBeersByFamilyLimit(ctx, MapToGetAllByFamilyParams(common.FRUMENTO, 5))
+		if err != nil {
+			ctx.String(http.StatusInternalServerError, "Error while getting beers")
+			return
+		}
+		ctx.HTML(200, "ranking.html", append(ipaBeers, frumentoBeers...))
 	})
 }
