@@ -12,3 +12,7 @@ UPDATE beers SET score = score + 1 where id = $1 RETURNING *;
 
 -- name: GetAllByFamily :many
 SELECT * FROM beers where family = $1 order by score DESC, name ASC;
+
+
+-- name: GetAllByFamilyLimit :many
+SELECT * FROM beers where family = $1 order by score DESC, name ASC limit $2;

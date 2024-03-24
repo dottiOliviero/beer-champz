@@ -19,6 +19,7 @@ type Repository interface {
 	Close()
 	GetAll(ctx context.Context) ([]Beer, error)
 	GetAllBeersByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error)
+	GetAllBeersByFamilyLimit(ctx context.Context, arg beerDB.GetAllByFamilyLimitParams) ([]Beer, error)
 	InsertBeer(ctx context.Context, params beerDB.InsertBeerParams) (int32, error)
 	UpdateBeerScore(ctx context.Context, id int32) (Beer, error)
 }
@@ -63,6 +64,18 @@ func (r *repository) UpdateBeerScore(ctx context.Context, id int32) (Beer, error
 
 func (r *repository) GetAllBeersByFamily(ctx context.Context, family pgtype.Text) ([]Beer, error) {
 	beers, err := r.querier.GetAllByFamily(ctx, family)
+	if err != nil {
+		return nil, err
+	}
+	var res []Beer
+	for _, beer := range beers {
+		res = append(res, mapBeerToBeerDTO(beer))
+	}
+	return res, nil
+}
+
+func (r *repository) GetAllBeersByFamilyLimit(ctx context.Context, params beerDB.GetAllByFamilyLimitParams) ([]Beer, error) {
+	beers, err := r.querier.GetAllByFamilyLimit(ctx, params)
 	if err != nil {
 		return nil, err
 	}

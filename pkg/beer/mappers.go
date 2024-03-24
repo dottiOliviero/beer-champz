@@ -19,6 +19,7 @@ func mapBeerToBeerDTO(beer beerDB.Beer) Beer {
 		Image:     beer.Image.String,
 		Score:     int(beer.Score.Int32),
 		Shop:      beer.Shop.String,
+		Family:    common.Family(beer.Family.String),
 	}
 }
 
@@ -34,9 +35,17 @@ func MapRequestToInsertParams(requestBody Beer) beerDB.InsertBeerParams {
 		Image:     pgtype.Text{String: requestBody.Image, Valid: true},
 		Score:     pgtype.Int4{Int32: int32(requestBody.Score), Valid: true},
 		Shop:      pgtype.Text{String: requestBody.Shop, Valid: true},
+		Family:    pgtype.Text{String: string(requestBody.Family), Valid: true},
 	}
 }
 
 func MapFamily(family common.Family) pgtype.Text {
 	return pgtype.Text{String: string(family), Valid: true}
+}
+
+func MapToGetAllByFamilyParams(family common.Family, limit int32) beerDB.GetAllByFamilyLimitParams {
+	return beerDB.GetAllByFamilyLimitParams{
+		Family: pgtype.Text{String: string(family), Valid: true},
+		Limit:  limit,
+	}
 }

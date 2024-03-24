@@ -83,6 +83,47 @@ func (q *Queries) GetAllByFamily(ctx context.Context, family pgtype.Text) ([]Bee
 	return items, nil
 }
 
+const getAllByFamilyLimit = `-- name: GetAllByFamilyLimit :many
+SELECT id, name, style, sub_style, abv, short_desc, brewery, image, score, shop, family FROM beers where family = $1 order by score DESC, name ASC limit $2
+`
+
+type GetAllByFamilyLimitParams struct {
+	Family pgtype.Text
+	Limit  int32
+}
+
+func (q *Queries) GetAllByFamilyLimit(ctx context.Context, arg GetAllByFamilyLimitParams) ([]Beer, error) {
+	rows, err := q.db.Query(ctx, getAllByFamilyLimit, arg.Family, arg.Limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Beer
+	for rows.Next() {
+		var i Beer
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Style,
+			&i.SubStyle,
+			&i.Abv,
+			&i.ShortDesc,
+			&i.Brewery,
+			&i.Image,
+			&i.Score,
+			&i.Shop,
+			&i.Family,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const insertBeer = `-- name: InsertBeer :one
 INSERT INTO beers (name, style, sub_style, abv, short_desc, brewery, image, score, shop, family) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id
 `
