@@ -11,54 +11,87 @@
 
 <body>
     <div class="" x-data="{activeBeer: {}}">
-        <div class="overflow-x-auto mx-auto">
-            <table class="table bg-slate-200/70">
-                <!-- head -->
-                <thead>
-                    <tr class="bg-amber-100/60">
-                        <th>Birra</th>
-                        <th>Birrificio</th>
-                        <th>ABV</th>
-                        <th>Punteggio</th>
-                        <th>Stile</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <div class="flex justify-center">
+            <p class="font-bold text-xl mt-2">Le migliori birre!</p>
+        </div>
+        <div class="inline-block min-w-full align-middle">
+            <div class="my-3 rounded-lg bg-amber-300 p-2 md:pt-0">
+                <div class="md:hidden">
                     {{ range .}}
-                    <tr
+                    <div key="{{ .ID }}" class="mb-2 w-full rounded-md bg-slate-200/70 p-4"
                         @click="detail_modal.showModal() ; activeBeer = {'name': '{{ .Name }}', 'desc': '{{ .ShortDesc }}', 'brewery': '{{ .Brewery }}', 'image': '{{ .Image }}', 'score': {{ .Score}}, 'style': '{{ .Style }}', 'abv': '{{ .ABV }}', 'shop': '{{ .Shop }}' }">
-                        <td>
-                            <div class="flex items-center space-x-3">
-                                <div class="avatar">
-                                    <div class="mask mask-squircle w-20 h-20">
-                                        <img src="{{ .Image }}" alt="Beer" class="h-full" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="font-bold text-lg">{{ .Name }}</div>
+                        <div class="flex items-center justify-between border-b pb-4 border-amber-700">
+                            <div>
+                                <div class="mb-2 flex items-center">
+                                    <img src="{{ .Image }}" class="mr-2 rounded-full w-7" />
+                                    <p class="font-bold text-3xl">{{ .Name }}</p>
                                 </div>
                             </div>
-                        </td>
-                        <td >{{ .Brewery }}</td>
-                        <td >{{ .ABV }}</td>
-                        <td>{{ .Score}}</td>
-                        {{if eq .Family "frumento"}}
-                            <td>Birra di Frumento</td>
-                        {{else}}
-                            <td>English Pale Ale</td>
-                        {{end}}
-                    </tr>
+                            <span class="font-bold text-2xl">{{ .Score}} </span>
+                        </div>
+                        <div class="flex w-full items-center justify-between pt-4">
+                            <div>
+                                <p class="text-xl font-medium">
+                                    {{ .Brewery}}
+                                </p>
+                                <p>{{ .ABV}} </p>
+                            </div>
+                            <div class="flex justify-end gap-2">
+                                <p class="text-xl font-medium">
+                                    {{ .Family }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                     {{ end }}
-                </tbody>
-            </table>
+                </div>
+                <table class="hidden min-w-full md:table">
+                    <!-- head -->
+                    <thead class="rounded-lg text-left text-sm font-normal">
+                        <tr class="">
+                            <th>Birra</th>
+                            <th>Birrificio</th>
+                            <th>ABV</th>
+                            <th>Punteggio</th>
+                            <th>Stile</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-slate-200/70">
+                        {{ range .}}
+                        <tr class="w-full border-b border-amber-700 py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                            @click="detail_modal.showModal() ; activeBeer = {'name': '{{ .Name }}', 'desc': '{{ .ShortDesc }}', 'brewery': '{{ .Brewery }}', 'image': '{{ .Image }}', 'score': {{ .Score}}, 'style': '{{ .Style }}', 'abv': '{{ .ABV }}', 'shop': '{{ .Shop }}' }">
+                            <td>
+                                <div class="flex items-center gap-3">
+                                    <div class="h-20 pl-2">
+                                        <img src="{{ .Image }}" alt="Beer" class="h-full" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-lg">{{ .Name }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ .Brewery }}</td>
+                            <td>{{ .ABV }}</td>
+                            <td>{{ .Score}}</td>
+                            {{if eq .Family "frumento"}}
+                            <td>Birra di Frumento</td>
+                            {{else}}
+                            <td>English Pale Ale</td>
+                            {{end}}
+                        </tr>
+                        {{ end }}
+                    </tbody>
+                </table>
+            </div>
         </div>
         <!-- MODAL -->
-        <dialog class="modal" id="detail_modal">
+        <dialog class="modal mt-5" id="detail_modal">
             <div class="modal-box bg-[url('assets/water-bkg.svg')] bg-opacity-60 px-5 w-10/12 max-w-5xl">
                 <form method="dialog">
                     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                 </form>
-                <div class="flex my-2 justify-center md:text-5xl text-4xl text-white font-bold" x-text="activeBeer.name"></div>
+                <div class="flex my-2 justify-center md:text-5xl text-4xl text-white font-bold"
+                    x-text="activeBeer.name"></div>
 
                 <div class="grid md:grid-rows-2 md:grid-flow-col gap-2">
                     <div
