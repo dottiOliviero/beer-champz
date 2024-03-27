@@ -79,6 +79,19 @@
             <p class="font-light">Fatto con luppolo, malto d'orzo, acqua e lievito</p>
         </aside>
     </footer>
+    <!-- modale per maggiore età -->
+    <dialog class="modal" id="major_modal" x-init="if(showMajor){major_modal.showModal()}"
+        x-data="{showMajor: $persist(true).using(sessionStorage)}">
+        <div class="modal-box bg-[url('assets/beer-bar.png')] bg-cover flex flex-col gap-4 h-48 justify-between">
+            <h1 class="text-4xl text-amber-800">Hai l'età legale per bere birra?</h1>
+            <div class="flex justify-center gap-4">
+                <button class="btn btn-active bg-slate-100/70 w-20" @click="showMajor = false; major_modal.close()">Si</button>
+                <button class="btn btn-active bg-slate-100/70 w-20"
+                    @click="window.open('https://www.beviresponsabile.it/', '_self'); major_modal.close()">No</button>
+            </div>
+
+        </div>
+    </dialog>
 </body>
 
 </html>
