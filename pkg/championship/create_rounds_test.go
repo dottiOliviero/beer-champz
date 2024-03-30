@@ -35,11 +35,11 @@ func TestCreateRounds(t *testing.T) {
 		for i := range res {
 			round := res[i]
 			// First rounds should have beers set
-			if round.ID == "A" || round.ID == "B" || round.ID == "C" {
+			if round.ID == "A" || round.ID == "B" || round.ID == "C" || round.ID == "D" {
 				assert.Equal(t, 2, len(round.Beers))
 			} else {
 				// Subsequent rounds should not have beers set
-				assert.Zero(t, round.Beers)
+				assert.Zero(t, len(round.Beers))
 			}
 		}
 	})
