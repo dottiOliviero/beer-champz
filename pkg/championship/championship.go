@@ -15,16 +15,16 @@ type ChampionshipEnhanced struct {
 	ID         int
 	WinnerID   int32
 	WinnerName string
-	Quarter1   RoundEndanched
-	Quarter2   RoundEndanched
-	Quarter3   RoundEndanched
-	Quarter4   RoundEndanched
-	Semi1      RoundEndanched
-	Semi2      RoundEndanched
-	Final      RoundEndanched
+	Quarter1   RoundEnhanched
+	Quarter2   RoundEnhanched
+	Quarter3   RoundEnhanched
+	Quarter4   RoundEnhanched
+	Semi1      RoundEnhanched
+	Semi2      RoundEnhanched
+	Final      RoundEnhanched
 }
 
-type RoundEndanched struct {
+type RoundEnhanched struct {
 	ID       string
 	WinnerID int32
 	Left     beer.Beer
