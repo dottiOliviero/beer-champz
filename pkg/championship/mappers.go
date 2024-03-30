@@ -36,11 +36,11 @@ func getRoundById(rounds []Round, ID string) Round {
 	return Round{}
 }
 
-func mapRoundToRoundEnhanced(r Round) RoundEndanched {
+func mapRoundToRoundEnhanced(r Round) RoundEnhanched {
 
 	if len(r.Beers) == 2 {
 		isActive := r.WinnerID == -1
-		return RoundEndanched{
+		return RoundEnhanched{
 			ID:       r.ID,
 			WinnerID: r.WinnerID,
 			Left:     r.Beers[0],
@@ -48,7 +48,7 @@ func mapRoundToRoundEnhanced(r Round) RoundEndanched {
 			IsActive: isActive,
 		}
 	} else if len(r.Beers) == 1 {
-		return RoundEndanched{
+		return RoundEnhanched{
 			ID:       r.ID,
 			WinnerID: r.WinnerID,
 			Left:     r.Beers[0],
@@ -56,7 +56,7 @@ func mapRoundToRoundEnhanced(r Round) RoundEndanched {
 			IsActive: false,
 		}
 	}
-	return RoundEndanched{
+	return RoundEnhanched{
 		ID:       r.ID,
 		WinnerID: r.WinnerID,
 		Left:     beer.Beer{},
@@ -65,7 +65,7 @@ func mapRoundToRoundEnhanced(r Round) RoundEndanched {
 	}
 }
 
-func mapChildRoundToRoundEnhanced(r Round, parentLeft Round, parentRight Round) RoundEndanched {
+func mapChildRoundToRoundEnhanced(r Round, parentLeft Round, parentRight Round) RoundEnhanched {
 	leftBeer := beer.GetByWinnerID(parentLeft.Beers, int(parentLeft.WinnerID))
 	rightBeer := beer.GetByWinnerID(parentRight.Beers, int(parentRight.WinnerID))
 
@@ -75,7 +75,7 @@ func mapChildRoundToRoundEnhanced(r Round, parentLeft Round, parentRight Round) 
 		isActive = true
 	}
 
-	return RoundEndanched{
+	return RoundEnhanched{
 		ID:       r.ID,
 		WinnerID: r.WinnerID,
 		Left:     leftBeer,
