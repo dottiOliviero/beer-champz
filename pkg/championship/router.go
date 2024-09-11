@@ -80,7 +80,7 @@ func AddViewsRouter(conf *config.Config, db *pgxpool.Pool, r *gin.RouterGroup) {
 
 		logger.Info("set winner for round", zap.String("roundId", requestBody.RoundID))
 		winnerId, _ := requestBody.WinnerID.Int64()
-		championship, err := SetRoundWinner(championshipRepository, int32(championshipID), requestBody.RoundID, int32(winnerId))
+		championship, err := StoreRoundWinner(championshipRepository, int32(championshipID), requestBody.RoundID, int32(winnerId))
 		if err != nil {
 			logger.Error("error setting round winner", zap.Error(err))
 			ctx.String(http.StatusInternalServerError, "Unable to set winner for the round")
