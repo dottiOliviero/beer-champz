@@ -3,6 +3,7 @@ package db
 import (
 	"beerchampz/pkg/config"
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -25,4 +26,11 @@ func GetDb(conf *config.Config) *pgxpool.Pool {
 	}
 
 	return conn
+}
+
+func ExecuteStatement(ctx context.Context, conn *pgxpool.Pool, query string) {
+	_, err := conn.Exec(ctx, query)
+	if err != nil {
+		fmt.Printf("there was an error executing the query: %v", err)
+	}
 }

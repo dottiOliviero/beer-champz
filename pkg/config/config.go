@@ -42,6 +42,18 @@ func Get() *Config {
 	}
 }
 
+func GetTestConfig() *Config {
+	logger, _ := zap.NewDevelopment()
+	return &Config{
+		DBName: "test",
+		DBHost: "localhost",
+		DBUser: "test",
+		DBPass: "test",
+		Logger: logger,
+		Port:   "8080",
+	}
+}
+
 // GetDBConnStr returns a database connection string
 func (c *Config) GetDBConnStr() string {
 	return fmt.Sprintf("host=%v user=%v password=%v dbname=%v sslmode=disable", c.DBHost, c.DBUser, c.DBPass, c.DBName)

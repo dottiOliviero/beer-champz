@@ -10,9 +10,17 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// SetRoundWinner :
-func SetRoundWinner(championshipRepository Repository, championshipID int32, roundID string, winnerID int32) (*Championship, error) {
+// StoreRoundWinner :
+func StoreRoundWinner(championshipRepository Repository, championshipID int32, roundID string, winnerID int32) (*Championship, error) {
 
+	c, err := setRoundWinner(championshipRepository, championshipID, roundID, winnerID)
+	if err != nil {
+		return nil, err
+	}
+	return updateChampionship(c, championshipRepository)
+}
+
+func setRoundWinner(championshipRepository Repository, championshipID int32, roundID string, winnerID int32) (*Championship, error) {
 	c, err := championshipRepository.GetByID(context.Background(), championshipID)
 	if err != nil {
 		return nil, fmt.Errorf("unble to retrieve the champioship: %v", err)
@@ -41,12 +49,16 @@ func SetRoundWinner(championshipRepository Repository, championshipID int32, rou
 			}
 		}
 	}
+	return &c, nil
+}
+
+func updateChampionship(c *Championship, championshipRepository Repository) (*Championship, error) {
 	rounds, err := mapRoundsToDB(c.Rounds)
 	if err != nil {
 		return nil, fmt.Errorf("error while mapping rounds to db: %v", err)
 	}
 	args := championshipDB.UpdateChampionshipParams{
-		ID:       championshipID,
+		ID:       int32(c.ID),
 		Winnerid: pgtype.Int4{Int32: int32(c.WinnerID), Valid: true},
 		Rounds:   rounds,
 	}
